@@ -18,7 +18,6 @@ import com.example.vndbapp.mvvm.VisualNovelState
 import com.example.vndbapp.mvvm.VisualNovelViewModel
 import com.example.vndbapp.reutils.ImageCard
 
-
 @Composable
 fun VisualNovelScreen(
     modifier: Modifier = Modifier,
