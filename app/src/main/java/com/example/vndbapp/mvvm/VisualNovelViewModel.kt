@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,14 +44,13 @@ class VisualNovelViewModel @Inject constructor(
                 filters = visualNovels
             )
 
-            Log.d("VisualNovelViewModel", "Response: isSuccessful=${response.isSuccessful}, code=${response.code()}, body=${response.body()}")
-
             if (response.isSuccessful && response.body() != null) {
                 val results = response.body()!!.results
-                Log.d("VisualNovelViewModel", "Got ${results.size} visual novels")
-                _uiState.value = VisualNovelState.Success(
-                    visualNovels = results
-                )
+
+                _uiState.update {
+                    VisualNovelState.Success(visualNovels = results)
+                }
+
             } else {
                 val error = "Error: ${response.code()} ${response.message()}"
                 Log.e("VisualNovelViewModel", error)
