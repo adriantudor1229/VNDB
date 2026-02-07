@@ -7,6 +7,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.vndbapp.model.Image
 import com.example.vndbapp.model.VisualNovel
 import com.example.vndbapp.reutils.ImageCardDetails
 
@@ -27,3 +29,17 @@ fun VisualNovelDetailScreen(
         Text(visualNovel.description)
     }
 }
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun VisualNovelDetailScreenPreview() = VisualNovelDetailScreen(
+    visualNovel = VisualNovel(
+        title = "Clannad",
+        image = Image(
+            url = "",
+            thumbnail = ""
+        ),
+        id = "1",
+        description = "Mock description"
+    )
+)
