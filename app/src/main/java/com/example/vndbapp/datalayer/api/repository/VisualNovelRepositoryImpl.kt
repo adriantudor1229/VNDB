@@ -2,6 +2,7 @@ package com.example.vndbapp.datalayer.api.repository
 
 import com.example.vndbapp.datalayer.api.VisualNovelApiService
 import com.example.vndbapp.model.RequestBodyVisualNovel
+import com.example.vndbapp.model.RequestBodyVisualNovelDetails
 import com.example.vndbapp.model.VisualNovelRespone
 import retrofit2.Response
 import javax.inject.Inject
@@ -38,6 +39,18 @@ class VisualNovelRepositoryImpl @Inject constructor(
                 fields = fields,
                 page = page,
                 filters = emptyList()
+            )
+        )
+    }
+
+    override suspend fun getVisualNovelDetails(
+        fields: String,
+        filters: List<String>
+    ): Response<VisualNovelRespone> {
+        return visualNovelApiService.getVisualNovelsDetails(
+            requestBodyVisualNovel = RequestBodyVisualNovelDetails(
+                fields = fields,
+                filters = filters
             )
         )
     }

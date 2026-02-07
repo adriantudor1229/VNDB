@@ -71,7 +71,7 @@ sealed class VisualNovelState {
 sealed interface VisualNovelEvent {
     data class GetVisualNovel(
         val page: Int,
-        val title: String = "title, image.url",
+        val title: String = "title, image.url, description",
         val filters: List<String> = emptyList()
     ) : VisualNovelEvent
 }

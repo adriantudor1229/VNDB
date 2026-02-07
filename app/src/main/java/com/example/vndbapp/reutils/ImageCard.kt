@@ -44,3 +44,26 @@ fun ImageCard(
         )
     }
 }
+
+@Composable
+fun ImageCardDetails(
+    imageThumbnail: String,
+    modifier: Modifier
+) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp, pressedElevation = 24.dp),
+        modifier = modifier
+            .padding(top = 1.dp)
+            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(8.dp))
+    ) {
+        SubcomposeAsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current).data(imageThumbnail)
+                .crossfade(true).build(),
+            contentScale = ContentScale.Crop,
+            contentDescription = stringResource(id = R.string.app_name),
+            modifier = Modifier
+                .width(200.dp)
+                .height(300.dp)
+        )
+    }
+}
