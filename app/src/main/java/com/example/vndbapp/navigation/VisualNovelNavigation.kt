@@ -16,6 +16,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.example.vndbapp.model.VisualNovel
 import com.example.vndbapp.screens.VisualNovelDetailScreen
 import com.example.vndbapp.screens.VisualNovelScreen
 import kotlinx.serialization.Serializable
@@ -24,7 +25,7 @@ import kotlinx.serialization.Serializable
 data object VisualNovelList : NavKey
 
 @Serializable
-data class VisualNovelDetail(val id: String) : NavKey
+data class VisualNovelDetail(val visualNovel: VisualNovel) : NavKey
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,14 +41,14 @@ fun NavScreen() {
                 ) { paddingValues ->
                     Box(modifier = Modifier.padding(paddingValues)) {
                         VisualNovelScreen(
-                            onNavigateToDetail = { id ->
-                                backStack.add(VisualNovelDetail(id))
+                            onNavigateToDetail = {
+                                backStack.add(VisualNovelDetail(it))
                             }
                         )
                     }
                 }
             }
-            entry<VisualNovelDetail> { detail ->
+            entry<VisualNovelDetail> { details ->
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -64,7 +65,9 @@ fun NavScreen() {
                     }
                 ) { paddingValues ->
                     Box(modifier = Modifier.padding(paddingValues)) {
-                        VisualNovelDetailScreen(vnId = detail.id)
+                       VisualNovelDetailScreen(
+                           visualNovel = details.visualNovel
+                       )
                     }
                 }
             }

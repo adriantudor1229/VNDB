@@ -2,82 +2,28 @@ package com.example.vndbapp.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.vndbapp.model.VisualNovel
-import com.example.vndbapp.mvvm.VisualNovelDetailsEvent
-import com.example.vndbapp.mvvm.VisualNovelDetailsState
-import com.example.vndbapp.mvvm.VisualNovelDetailsViewModel
 import com.example.vndbapp.reutils.ImageCardDetails
 
 @Composable
 fun VisualNovelDetailScreen(
     modifier: Modifier = Modifier,
-    viewModel: VisualNovelDetailsViewModel = hiltViewModel(),
-    vnId: String
+    visualNovel: VisualNovel
 ) {
-
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    VisualNovelDetailsContent(
-        modifier = modifier,
-        uiState = uiState,
-        onEvent = viewModel::onEvent,
-        vnId = vnId
-    )
-}
-
-@Composable
-fun VisualNovelDetailsContent(
-    modifier: Modifier = Modifier,
-    uiState: VisualNovelDetailsState,
-    onEvent: (VisualNovelDetailsEvent) -> Unit,
-    vnId: String
-) {
-    LaunchedEffect(key1 = vnId) {
-        onEvent(
-            VisualNovelDetailsEvent.GetVisualNovelDetails(
-                id = vnId
+    Column(modifier = modifier.verticalScroll(state = rememberScrollState()))
+    {
+        Row {
+            ImageCardDetails(
+                imageThumbnail = visualNovel.image.thumbnail ?: "",
+                modifier = modifier
             )
-        )
-    }
-
-    when (uiState) {
-        is VisualNovelDetailsState.Error -> Text("Error")
-        is VisualNovelDetailsState.Loading -> Text("Loading")
-        is VisualNovelDetailsState.Success -> {
-            VisualNovelDetailsList(
-                visualNovels = uiState.visualNovels
-            )
+            Text(text = visualNovel.title)
         }
-    }
-
-}
-
-@Composable
-fun VisualNovelDetailsList(
-    modifier: Modifier = Modifier,
-    visualNovels: List<VisualNovel>,
-) {
-    LazyColumn {
-        items(visualNovels) {
-            Column {
-                Row {
-                    ImageCardDetails(
-                        imageThumbnail = it.image.thumbnail ?: "",
-                        modifier = modifier
-                    )
-                    Text(text = it.title)
-                }
-                Text(it.description)
-            }
-        }
+        Text(visualNovel.description)
     }
 }
