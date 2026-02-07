@@ -1,5 +1,8 @@
 package com.example.vndbapp.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class VisualNovel(
     val title: String,
     val image: Image,
@@ -13,16 +16,13 @@ data class RequestBodyVisualNovel(
     val filters: List<String>  // was "filter", API expects "filters"
 )
 
-data class RequestBodyVisualNovelDetails(
-    val fields: String,
-    val filters: List<String>
-)
 
-data class VisualNovelRespone(
+data class VisualNovelResponse(
     val results: List<VisualNovel>,  // API returns "results" not "result"
     val more: Boolean
 )
 
+@Serializable
 data class Image(
     val url: String? = null,
     val thumbnail: String? = null
