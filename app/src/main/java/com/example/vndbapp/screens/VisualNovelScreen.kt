@@ -22,7 +22,7 @@ import com.example.vndbapp.reutils.ImageCard
 fun VisualNovelScreen(
     modifier: Modifier = Modifier,
     viewModel: VisualNovelViewModel = hiltViewModel(),
-    onNavigateToDetail: (String) -> Unit = {}
+    onNavigateToDetail: (VisualNovel) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -39,7 +39,7 @@ private fun VisualNovelListContent(
     modifier: Modifier = Modifier,
     uiState: VisualNovelState,
     onEvent: (VisualNovelEvent) -> Unit,
-    onNavigateToDetail: (String) -> Unit = {}
+    onNavigateToDetail: (VisualNovel) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 10 }, initialPage = 0)
     LaunchedEffect(key1 = pagerState.currentPage) {
@@ -54,7 +54,7 @@ private fun VisualNovelListContent(
     HorizontalPager(
         state = pagerState,
         modifier = modifier
-    ) { page ->
+    ) {
         when (uiState) {
             is VisualNovelState.Loading -> {
                 Text(text = "Loading")
@@ -79,14 +79,14 @@ private fun VisualNovelListContent(
 fun VisualNovelGrid(
     modifier: Modifier = Modifier,
     visualNovels: List<VisualNovel>,
-    onNavigateToDetail: (String) -> Unit = {},
+    onNavigateToDetail: (VisualNovel) -> Unit,
 ) {
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
         items(visualNovels) { vn ->
             ImageCard(
                 imageUrl = vn.image.url ?: "",
                 vnId = vn.id,
-                onClick = { onNavigateToDetail(vn.id) },
+                onClick = { onNavigateToDetail(vn) },
                 modifier = modifier
             )
         }

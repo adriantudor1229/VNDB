@@ -1,6 +1,6 @@
 package com.example.vndbapp.datalayer.api.repository
 
-import com.example.vndbapp.model.VisualNovelRespone
+import com.example.vndbapp.model.VisualNovelResponse
 import retrofit2.Response
 
 /**
@@ -69,11 +69,5 @@ interface VisualNovelRepository {
         page: Int,
         fields: String = "title",
         filters: List<String> = emptyList()
-    ): Response<VisualNovelRespone>
-
-    suspend fun getVisualNovelDetails(
-        fields: String = "title",
-        filters: List<String> = emptyList()
-    ): Response <VisualNovelRespone>
-
+    ): Response<VisualNovelResponse>
 }
