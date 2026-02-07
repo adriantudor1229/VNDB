@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vndbapp.datalayer.api.repository.VisualNovelRepository
+import com.example.vndbapp.db.LocalVisualNovelRepository
 import com.example.vndbapp.model.VisualNovel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VisualNovelViewModel @Inject constructor(
-    private val visualNovelRepository: VisualNovelRepository
+    private val visualNovelRepository: VisualNovelRepository,
+    private val localVisualNovelRepository: LocalVisualNovelRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<VisualNovelState>(VisualNovelState.Loading)
@@ -46,6 +48,8 @@ class VisualNovelViewModel @Inject constructor(
 
             if (response.isSuccessful && response.body() != null) {
                 val results = response.body()!!.results
+
+                localVisualNovelRepository.saveVisualNovels(novels = results)
 
                 _uiState.update {
                     VisualNovelState.Success(visualNovels = results)
