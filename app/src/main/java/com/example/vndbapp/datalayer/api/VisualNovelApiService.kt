@@ -1,6 +1,7 @@
 package com.example.vndbapp.datalayer.api
 
 import com.example.vndbapp.model.RequestBodyVisualNovel
+import com.example.vndbapp.model.RequestBodyVisualNovelDetails
 import com.example.vndbapp.model.VisualNovelRespone
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -27,6 +28,12 @@ interface VisualNovelApiService {
     @POST("vn")
     suspend fun getVisualNovels(
         @Body requestBodyVisualNovel: RequestBodyVisualNovel
+    ): Response<VisualNovelRespone>
+
+    @Headers("Content-Type: application/json")
+    @POST("vn")
+    suspend fun getVisualNovelsDetails(
+        @Body requestBodyVisualNovel: RequestBodyVisualNovelDetails
     ): Response<VisualNovelRespone>
 }
 

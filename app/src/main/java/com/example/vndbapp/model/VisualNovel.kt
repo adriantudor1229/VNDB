@@ -3,13 +3,19 @@ package com.example.vndbapp.model
 data class VisualNovel(
     val title: String,
     val image: Image,
-    val id: String
+    val id: String,
+    val description: String
 )
 
 data class RequestBodyVisualNovel(
     val fields: String,
     val page: Int,
     val filters: List<String>  // was "filter", API expects "filters"
+)
+
+data class RequestBodyVisualNovelDetails(
+    val fields: String,
+    val filters: List<String>
 )
 
 data class VisualNovelRespone(
