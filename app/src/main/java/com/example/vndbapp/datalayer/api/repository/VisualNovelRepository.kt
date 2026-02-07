@@ -70,4 +70,10 @@ interface VisualNovelRepository {
         fields: String = "title",
         filters: List<String> = emptyList()
     ): Response<VisualNovelRespone>
+
+    suspend fun getVisualNovelDetails(
+        fields: String = "title",
+        filters: List<String> = emptyList()
+    ): Response <VisualNovelRespone>
+
 }
