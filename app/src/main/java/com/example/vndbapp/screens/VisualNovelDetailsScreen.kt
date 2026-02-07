@@ -2,12 +2,16 @@ package com.example.vndbapp.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.vndbapp.model.Image
 import com.example.vndbapp.model.VisualNovel
 import com.example.vndbapp.reutils.ImageCardDetails
@@ -17,16 +21,33 @@ fun VisualNovelDetailScreen(
     modifier: Modifier = Modifier,
     visualNovel: VisualNovel
 ) {
-    Column(modifier = modifier.verticalScroll(state = rememberScrollState()))
-    {
-        Row {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(state = rememberScrollState())
+            .padding(16.dp) // Padding on Column instead of each child
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp) // Space between Row and description
+        ) {
             ImageCardDetails(
                 imageThumbnail = visualNovel.image.thumbnail ?: "",
-                modifier = modifier
+                modifier = Modifier // No padding here - controlled by parent
             )
-            Text(text = visualNovel.title)
+            Text(
+                text = "Title: ${visualNovel.title}",
+                modifier = Modifier
+                    .weight(1f) // Better than fillMaxWidth() in Row
+                    .padding(start = 8.dp)
+            )
         }
-        Text(visualNovel.description)
+        Text(
+            text = visualNovel.description,
+            modifier = Modifier.fillMaxWidth()
+            // Padding already on Column
+        )
     }
 }
 
