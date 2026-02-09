@@ -1,0 +1,28 @@
+package com.example.vndbapp.db
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "visual_novels")
+data class VisualNovelsEntity(
+
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val id: String,
+
+    @ColumnInfo(name = "title")
+    val title: String,
+
+    @ColumnInfo(name = "description")
+    val description: String,
+
+    @ColumnInfo(name = "image_url")
+    val imageUrl: String? = null,
+
+    @ColumnInfo(name = "thumbnail_url")
+    val thumbnailUrl: String? = null,
+
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long = System.currentTimeMillis()
+)
