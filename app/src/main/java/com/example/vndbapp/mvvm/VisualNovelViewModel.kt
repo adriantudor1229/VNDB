@@ -3,8 +3,8 @@ package com.example.vndbapp.mvvm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.vndbapp.datalayer.api.repository.LocalVisualNovelRepository
 import com.example.vndbapp.datalayer.api.repository.VisualNovelRepository
-import com.example.vndbapp.db.LocalVisualNovelRepository
 import com.example.vndbapp.model.VisualNovel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
