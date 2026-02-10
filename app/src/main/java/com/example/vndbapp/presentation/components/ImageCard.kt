@@ -1,4 +1,4 @@
-package com.example.vndbapp.reutils
+package com.example.vndbapp.presentation.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

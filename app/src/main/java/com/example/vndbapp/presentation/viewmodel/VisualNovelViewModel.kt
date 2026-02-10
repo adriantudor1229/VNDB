@@ -1,9 +1,9 @@
-package com.example.vndbapp.mvvm
+package com.example.vndbapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vndbapp.datalayer.api.repository.LocalVisualNovelRepository
-import com.example.vndbapp.db.VisualNovelsEntity
+import com.example.vndbapp.data.local.repository.LocalVisualNovelRepositoryImpl
+import com.example.vndbapp.data.local.entity.VisualNovelEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,20 +17,20 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class VisualNovelViewModel @Inject constructor(
-    private val localVisualNovelRepository: LocalVisualNovelRepository
+    private val localVisualNovelRepositoryImpl: LocalVisualNovelRepositoryImpl
 ) : ViewModel() {
     private val _fields = MutableStateFlow("title, image.url, image.thumbnail, description")
     private val _filters = MutableStateFlow<List<String>>(emptyList())
     private val _currentPage = MutableStateFlow(0)
 
-    val currentPageVns: StateFlow<List<VisualNovelsEntity>> = combine(
+    val currentPageVns: StateFlow<List<VisualNovelEntity>> = combine(
         _currentPage,
         _fields,
         _filters
     ) { page, fields, filters ->
         Triple(page, fields, filters)
     }.flatMapLatest { (page, fields, filters) ->
-        localVisualNovelRepository.getVisualNovelsByPage(
+        localVisualNovelRepositoryImpl.getVisualNovelsByPage(
             page = page,
             fields = fields,
             filters = filters
@@ -65,12 +65,4 @@ class VisualNovelViewModel @Inject constructor(
         _fields.value = fields
         _filters.value = filters
     }
-}
-
-sealed interface VisualNovelEvent {
-    data class GetVisualNovel(
-        val page: Int,
-        val fields: String = "title, image.url, image.thumbnail, description",
-        val filters: List<String> = emptyList()
-    ) : VisualNovelEvent
 }

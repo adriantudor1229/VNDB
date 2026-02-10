@@ -1,23 +1,23 @@
-package com.example.vndbapp.datalayer.api.repository
+package com.example.vndbapp.data.local.repository
 
-import com.example.vndbapp.datalayer.api.VisualNovelApiService
-import com.example.vndbapp.db.VisualNovelsEntity
-import com.example.vndbapp.db.dao.VisualNovelDao
-import com.example.vndbapp.mapper.toEntity
-import com.example.vndbapp.model.RequestBodyVisualNovel
-import com.example.vndbapp.model.VisualNovel
+import com.example.vndbapp.data.local.dao.VisualNovelDao
+import com.example.vndbapp.data.local.entity.VisualNovelEntity
+import com.example.vndbapp.data.remote.api.VisualNovelApiService
+import com.example.vndbapp.data.mapper.toEntity
+import com.example.vndbapp.data.model.RequestBodyVisualNovel
+import com.example.vndbapp.data.model.VisualNovel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class LocalVisualNovelRepository @Inject constructor(
+class LocalVisualNovelRepositoryImpl @Inject constructor(
     private val visualNovelDao: VisualNovelDao,
     private val visualNovelApiService: VisualNovelApiService
-) {
-    suspend fun getVisualNovelsByPage(
+): LocalVisualNovelRepository {
+    override suspend fun getVisualNovelsByPage(
         page: Int,
         fields: String,
         filters: List<String>
-    ): Flow<List<VisualNovelsEntity>> {
+    ): Flow<List<VisualNovelEntity>> {
 
         val cachedCount = visualNovelDao.getPageCount(page)
 
@@ -31,7 +31,7 @@ class LocalVisualNovelRepository @Inject constructor(
                     )
                 )
                 val entities = vns.body()!!.results.map { it.toEntity(page = page) }
-                visualNovelDao.insertVisualNovels(novels = entities)
+                visualNovelDao.insertVisualNovels(vns = entities)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -39,8 +39,8 @@ class LocalVisualNovelRepository @Inject constructor(
         return visualNovelDao.getVisualNovelsByPage(page = page)
     }
 
-    suspend fun saveVisualNovels(novels: List<VisualNovel>, page: Int) {
-        val entities = novels.map { it.toEntity(page) }
+    override suspend fun saveVisualNovels(vns: List<VisualNovel>, page: Int) {
+        val entities = vns.map { it.toEntity(page) }
         visualNovelDao.insertVisualNovels(entities)
     }
 }

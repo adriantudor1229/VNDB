@@ -1,7 +1,7 @@
-package com.example.vndbapp.hilt
+package com.example.vndbapp.di
 
-import com.example.vndbapp.datalayer.api.repository.VisualNovelRepository
-import com.example.vndbapp.datalayer.api.repository.VisualNovelRepositoryImpl
+import com.example.vndbapp.data.remote.repository.VisualNovelRepository
+import com.example.vndbapp.data.remote.repository.VisualNovelRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.example.vndbapp.model
+package com.example.vndbapp.data.model
 
 import kotlinx.serialization.Serializable
 
@@ -13,12 +13,12 @@ data class VisualNovel(
 data class RequestBodyVisualNovel(
     val fields: String,
     val page: Int,
-    val filters: List<String>  // was "filter", API expects "filters"
+    val filters: List<String>
 )
 
 
 data class VisualNovelResponse(
-    val results: List<VisualNovel>,  // API returns "results" not "result"
+    val results: List<VisualNovel>,
     val more: Boolean
 )
 
