@@ -1,23 +1,20 @@
 package com.example.vndbapp.mvvm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vndbapp.datalayer.api.repository.LocalVisualNovelRepository
-import com.example.vndbapp.datalayer.api.repository.VisualNovelRepository
 import com.example.vndbapp.db.VisualNovelsEntity
-import com.example.vndbapp.model.VisualNovel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class VisualNovelViewModel @Inject constructor(
     private val localVisualNovelRepository: LocalVisualNovelRepository
@@ -68,13 +65,6 @@ class VisualNovelViewModel @Inject constructor(
         _fields.value = fields
         _filters.value = filters
     }
-
-}
-
-sealed class VisualNovelState {
-    object Loading : VisualNovelState()
-    data class Success(val visualNovels: List<VisualNovel>) : VisualNovelState()
-    data class Error(val message: String) : VisualNovelState()
 }
 
 sealed interface VisualNovelEvent {
