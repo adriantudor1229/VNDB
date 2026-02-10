@@ -1,11 +1,11 @@
-package com.example.vndbapp.db
+package com.example.vndbapp.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "visual_novels")
-data class VisualNovelsEntity(
+data class VisualNovelEntity(
 
     @PrimaryKey
     @ColumnInfo(name = "id")

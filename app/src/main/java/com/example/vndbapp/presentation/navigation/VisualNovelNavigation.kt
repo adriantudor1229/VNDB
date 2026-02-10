@@ -1,4 +1,4 @@
-package com.example.vndbapp.navigation
+package com.example.vndbapp.presentation.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -16,9 +16,9 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.example.vndbapp.model.VisualNovel
-import com.example.vndbapp.screens.VisualNovelDetailScreen
-import com.example.vndbapp.screens.VisualNovelScreen
+import com.example.vndbapp.data.model.VisualNovel
+import com.example.vndbapp.presentation.screens.VisualNovelDetailScreen
+import com.example.vndbapp.presentation.screens.VisualNovelScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,11 +1,11 @@
-package com.example.vndbapp.mapper
+package com.example.vndbapp.data.mapper
 
-import com.example.vndbapp.db.VisualNovelsEntity
-import com.example.vndbapp.model.Image
-import com.example.vndbapp.model.VisualNovel
+import com.example.vndbapp.data.local.entity.VisualNovelEntity
+import com.example.vndbapp.data.model.Image
+import com.example.vndbapp.data.model.VisualNovel
 
-fun VisualNovel.toEntity(page: Int): VisualNovelsEntity {
-    return VisualNovelsEntity(
+fun VisualNovel.toEntity(page: Int): VisualNovelEntity {
+    return VisualNovelEntity(
         id = id,
         title = title,
         description = description,
@@ -15,7 +15,7 @@ fun VisualNovel.toEntity(page: Int): VisualNovelsEntity {
     )
 }
 
-fun VisualNovelsEntity.toModel(): VisualNovel {
+fun VisualNovelEntity.toModel(): VisualNovel {
     return VisualNovel(
         id = id,
         title = title,

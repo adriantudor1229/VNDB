@@ -1,4 +1,4 @@
-package com.example.vndbapp.screens
+package com.example.vndbapp.presentation.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.vndbapp.model.Image
-import com.example.vndbapp.model.VisualNovel
-import com.example.vndbapp.reutils.ImageCardDetails
+import com.example.vndbapp.data.model.Image
+import com.example.vndbapp.data.model.VisualNovel
+import com.example.vndbapp.presentation.components.ImageCardDetails
 
 @Composable
 fun VisualNovelDetailScreen(
@@ -25,28 +25,27 @@ fun VisualNovelDetailScreen(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(state = rememberScrollState())
-            .padding(16.dp) // Padding on Column instead of each child
+            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp) // Space between Row and description
+                .padding(bottom = 16.dp)
         ) {
             ImageCardDetails(
                 imageThumbnail = visualNovel.image.thumbnail ?: "",
-                modifier = Modifier // No padding here - controlled by parent
+                modifier = Modifier
             )
             Text(
                 text = "Title: ${visualNovel.title}",
                 modifier = Modifier
-                    .weight(1f) // Better than fillMaxWidth() in Row
+                    .weight(1f)
                     .padding(start = 8.dp)
             )
         }
         Text(
             text = visualNovel.description,
             modifier = Modifier.fillMaxWidth()
-            // Padding already on Column
         )
     }
 }

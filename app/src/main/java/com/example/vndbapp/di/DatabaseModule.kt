@@ -1,9 +1,9 @@
-package com.example.vndbapp.hilt
+package com.example.vndbapp.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.vndbapp.db.dao.VisualNovelDao
-import com.example.vndbapp.db.dao.VisualNovelDatabase
+import com.example.vndbapp.data.local.dao.VisualNovelDao
+import com.example.vndbapp.data.local.database.VisualNovelDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

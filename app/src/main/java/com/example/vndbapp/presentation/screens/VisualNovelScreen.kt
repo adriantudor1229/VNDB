@@ -1,4 +1,4 @@
-package com.example.vndbapp.screens
+package com.example.vndbapp.presentation.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.vndbapp.mapper.toModel
-import com.example.vndbapp.model.VisualNovel
-import com.example.vndbapp.mvvm.VisualNovelViewModel
-import com.example.vndbapp.reutils.ImageCard
+import com.example.vndbapp.data.mapper.toModel
+import com.example.vndbapp.data.model.VisualNovel
+import com.example.vndbapp.presentation.viewmodel.VisualNovelViewModel
+import com.example.vndbapp.presentation.components.ImageCard
 
 @Composable
 fun VisualNovelScreen(
