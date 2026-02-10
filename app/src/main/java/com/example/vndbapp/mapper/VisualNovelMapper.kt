@@ -4,13 +4,14 @@ import com.example.vndbapp.db.VisualNovelsEntity
 import com.example.vndbapp.model.Image
 import com.example.vndbapp.model.VisualNovel
 
-fun VisualNovel.toEntity(): VisualNovelsEntity {
+fun VisualNovel.toEntity(page: Int): VisualNovelsEntity {
     return VisualNovelsEntity(
         id = id,
         title = title,
         description = description,
         imageUrl = image.url,
-        thumbnailUrl = image.thumbnail
+        thumbnailUrl = image.thumbnail,
+        page = page
     )
 }
 

@@ -5,65 +5,70 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vndbapp.datalayer.api.repository.LocalVisualNovelRepository
 import com.example.vndbapp.datalayer.api.repository.VisualNovelRepository
+import com.example.vndbapp.db.VisualNovelsEntity
 import com.example.vndbapp.model.VisualNovel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VisualNovelViewModel @Inject constructor(
-    private val visualNovelRepository: VisualNovelRepository,
     private val localVisualNovelRepository: LocalVisualNovelRepository
 ) : ViewModel() {
+    private val _fields = MutableStateFlow("title, image.url, image.thumbnail, description")
+    private val _filters = MutableStateFlow<List<String>>(emptyList())
+    private val _currentPage = MutableStateFlow(0)
 
-    private val _uiState = MutableStateFlow<VisualNovelState>(VisualNovelState.Loading)
-    val uiState: StateFlow<VisualNovelState> = _uiState.asStateFlow()
+    val currentPageVns: StateFlow<List<VisualNovelsEntity>> = combine(
+        _currentPage,
+        _fields,
+        _filters
+    ) { page, fields, filters ->
+        Triple(page, fields, filters)
+    }.flatMapLatest { (page, fields, filters) ->
+        localVisualNovelRepository.getVisualNovelsByPage(
+            page = page,
+            fields = fields,
+            filters = filters
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
+
+    init {
+        onEvent(VisualNovelEvent.GetVisualNovel(page = 0))
+    }
 
     fun onEvent(event: VisualNovelEvent) {
         when (event) {
-            is VisualNovelEvent.GetVisualNovel -> getVisualNovels(
-                page = event.page,
-                title = event.title,
-                visualNovels = event.filters,
-            )
-        }
-    }
-
-    private fun getVisualNovels(
-        page: Int,
-        title: String,
-        visualNovels: List<String> = emptyList()
-    ) {
-        _uiState.value = VisualNovelState.Loading
-        viewModelScope.launch {
-            val response = visualNovelRepository.getVisualNovels(
-                page = page,
-                fields = title,
-                filters = visualNovels
-            )
-
-            if (response.isSuccessful && response.body() != null) {
-                val results = response.body()!!.results
-
-                localVisualNovelRepository.saveVisualNovels(novels = results)
-
-                _uiState.update {
-                    VisualNovelState.Success(visualNovels = results)
-                }
-
-            } else {
-                val error = "Error: ${response.code()} ${response.message()}"
-                Log.e("VisualNovelViewModel", error)
-                _uiState.value = VisualNovelState.Error(
-                    message = error
-                )
+            is VisualNovelEvent.GetVisualNovel -> {
+                _currentPage.value = event.page
+                _fields.value = event.fields
+                _filters.value = event.filters
             }
         }
     }
+
+    fun loadPage(
+        page: Int,
+        fields: String = "title, image.url, image.thumbnail, description",
+        filters: List<String> = emptyList()
+    ) {
+        _currentPage.value = page
+        _fields.value = fields
+        _filters.value = filters
+    }
+
 }
 
 sealed class VisualNovelState {
@@ -75,7 +80,7 @@ sealed class VisualNovelState {
 sealed interface VisualNovelEvent {
     data class GetVisualNovel(
         val page: Int,
-        val title: String = "title, image.url, image.thumbnail, description",
+        val fields: String = "title, image.url, image.thumbnail, description",
         val filters: List<String> = emptyList()
     ) : VisualNovelEvent
 }

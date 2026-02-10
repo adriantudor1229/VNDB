@@ -1,17 +1,23 @@
 package com.example.vndbapp.screens
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.vndbapp.mapper.toModel
 import com.example.vndbapp.model.VisualNovel
 import com.example.vndbapp.mvvm.VisualNovelEvent
 import com.example.vndbapp.mvvm.VisualNovelState
@@ -21,14 +27,11 @@ import com.example.vndbapp.reutils.ImageCard
 @Composable
 fun VisualNovelScreen(
     modifier: Modifier = Modifier,
-    viewModel: VisualNovelViewModel = hiltViewModel(),
+
     onNavigateToDetail: (VisualNovel) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     VisualNovelListContent(
-        uiState = uiState,
-        onEvent = viewModel::onEvent,
         onNavigateToDetail = onNavigateToDetail,
         modifier = modifier
     )
@@ -37,40 +40,38 @@ fun VisualNovelScreen(
 @Composable
 private fun VisualNovelListContent(
     modifier: Modifier = Modifier,
-    uiState: VisualNovelState,
-    onEvent: (VisualNovelEvent) -> Unit,
-    onNavigateToDetail: (VisualNovel) -> Unit
+    onNavigateToDetail: (VisualNovel) -> Unit,
+    viewModel: VisualNovelViewModel = hiltViewModel(),
 ) {
     val pagerState = rememberPagerState(pageCount = { 10 }, initialPage = 0)
-    LaunchedEffect(key1 = pagerState.currentPage) {
+    val visualNovels by viewModel.currentPageVns.collectAsState()
+
+    LaunchedEffect(pagerState.currentPage) {
         val pageNumber = pagerState.currentPage + 1
-        onEvent(
-            VisualNovelEvent.GetVisualNovel(
-                page = pageNumber,
-            )
+        viewModel.loadPage(
+            page = pageNumber,
+            fields = "title, image.url, image.thumbnail, description",
+            filters = emptyList()
         )
     }
 
     HorizontalPager(
         state = pagerState,
         modifier = modifier
-    ) {
-        when (uiState) {
-            is VisualNovelState.Loading -> {
-                Text(text = "Loading")
+    ) { page ->
+        if (visualNovels.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-
-            is VisualNovelState.Success -> {
-                VisualNovelGrid(
-                    visualNovels = uiState.visualNovels,
-                    onNavigateToDetail = onNavigateToDetail,
-                    modifier = modifier
-                )
-            }
-
-            is VisualNovelState.Error -> {
-                Text(text = "Error: ${uiState.message}")
-            }
+        } else {
+            VisualNovelGrid(
+                visualNovels = visualNovels.map { it.toModel() },
+                onNavigateToDetail = onNavigateToDetail,
+                modifier = modifier
+            )
         }
     }
 }
