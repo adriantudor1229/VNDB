@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,11 +15,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.vndbapp.mapper.toModel
 import com.example.vndbapp.model.VisualNovel
-import com.example.vndbapp.mvvm.VisualNovelEvent
-import com.example.vndbapp.mvvm.VisualNovelState
 import com.example.vndbapp.mvvm.VisualNovelViewModel
 import com.example.vndbapp.reutils.ImageCard
 
