@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface VisualNovelDao {
 
-    @Query("SELECT * FROM visual_novels ORDER BY created_at DESC")
-    fun getAllVisualNovels(): Flow<List<VisualNovelsEntity>>
-
+    @Query("SELECT * FROM visual_novels WHERE page = :page")
+    fun getVisualNovelsByPage(page: Int): Flow<List<VisualNovelsEntity>>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVisualNovels(novels: List<VisualNovelsEntity>)
 
+    @Query("SELECT COUNT(*) FROM visual_novels WHERE page = :page")
+    suspend fun getPageCount(page: Int): Int
 }
 
 @Database(

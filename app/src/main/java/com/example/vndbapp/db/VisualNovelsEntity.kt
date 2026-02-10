@@ -11,6 +11,9 @@ data class VisualNovelsEntity(
     @ColumnInfo(name = "id")
     val id: String,
 
+    @ColumnInfo(name = "page")
+    val page: Int,
+
     @ColumnInfo(name = "title")
     val title: String,
 
