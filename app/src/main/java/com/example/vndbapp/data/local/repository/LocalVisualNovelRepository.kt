@@ -8,8 +8,6 @@ interface LocalVisualNovelRepository {
 
     suspend fun getVisualNovelsByPage(
         page: Int,
-        fields: String = "title",
-        filters: List<String> = emptyList()
     ): Flow<List<VisualNovelEntity>>
 
     suspend fun saveVisualNovels(

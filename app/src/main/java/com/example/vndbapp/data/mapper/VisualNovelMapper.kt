@@ -11,6 +11,7 @@ fun VisualNovel.toEntity(page: Int): VisualNovelEntity {
         description = description,
         imageUrl = image.url,
         thumbnailUrl = image.thumbnail,
+        explicit = image.explicit,
         page = page
     )
 }
@@ -22,7 +23,8 @@ fun VisualNovelEntity.toModel(): VisualNovel {
         description = description,
         image = Image(
             url = imageUrl,
-            thumbnail = thumbnailUrl
+            thumbnail = thumbnailUrl,
+            explicit = explicit,
         )
     )
 }

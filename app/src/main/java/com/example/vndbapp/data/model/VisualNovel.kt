@@ -1,5 +1,6 @@
 package com.example.vndbapp.data.model
 
+import com.squareup.moshi.Json
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,5 +26,7 @@ data class VisualNovelResponse(
 @Serializable
 data class Image(
     val url: String? = null,
-    val thumbnail: String? = null
+    val thumbnail: String? = null,
+    @param:Json(name = "sexual")
+    val explicit: Double
 )

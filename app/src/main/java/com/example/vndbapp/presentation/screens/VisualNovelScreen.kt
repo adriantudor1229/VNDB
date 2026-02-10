@@ -46,8 +46,6 @@ private fun VisualNovelListContent(
         val pageNumber = pagerState.currentPage + 1
         viewModel.loadPage(
             page = pageNumber,
-            fields = "title, image.url, image.thumbnail, description",
-            filters = emptyList()
         )
     }
 
@@ -79,7 +77,7 @@ fun VisualNovelGrid(
     onNavigateToDetail: (VisualNovel) -> Unit,
 ) {
     LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-        items(visualNovels) { vn ->
+        items(visualNovels.filter { it.image.explicit < 0.4 }) { vn ->
             ImageCard(
                 imageUrl = vn.image.url ?: "",
                 vnId = vn.id,

@@ -2,21 +2,19 @@ package com.example.vndbapp.data.local.repository
 
 import com.example.vndbapp.data.local.dao.VisualNovelDao
 import com.example.vndbapp.data.local.entity.VisualNovelEntity
-import com.example.vndbapp.data.remote.api.VisualNovelApiService
 import com.example.vndbapp.data.mapper.toEntity
 import com.example.vndbapp.data.model.RequestBodyVisualNovel
 import com.example.vndbapp.data.model.VisualNovel
+import com.example.vndbapp.data.remote.api.VisualNovelApiService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LocalVisualNovelRepositoryImpl @Inject constructor(
     private val visualNovelDao: VisualNovelDao,
     private val visualNovelApiService: VisualNovelApiService
-): LocalVisualNovelRepository {
+) : LocalVisualNovelRepository {
     override suspend fun getVisualNovelsByPage(
         page: Int,
-        fields: String,
-        filters: List<String>
     ): Flow<List<VisualNovelEntity>> {
 
         val cachedCount = visualNovelDao.getPageCount(page)
@@ -25,9 +23,9 @@ class LocalVisualNovelRepositoryImpl @Inject constructor(
             try {
                 val vns = visualNovelApiService.getVisualNovels(
                     requestBodyVisualNovel = RequestBodyVisualNovel(
-                        fields = fields,
                         page = page,
-                        filters = filters
+                        fields = "title, image.url, image.thumbnail, image.sexual, description",
+                        filters = emptyList()
                     )
                 )
                 val entities = vns.body()!!.results.map { it.toEntity(page = page) }
