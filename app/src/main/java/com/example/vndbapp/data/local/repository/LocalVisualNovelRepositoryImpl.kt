@@ -6,6 +6,7 @@ import com.example.vndbapp.data.mapper.toEntity
 import com.example.vndbapp.data.model.RequestBodyVisualNovel
 import com.example.vndbapp.data.model.VisualNovel
 import com.example.vndbapp.data.remote.api.VisualNovelApiService
+import com.example.vndbapp.utils.ApiConstants
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -24,12 +25,14 @@ class LocalVisualNovelRepositoryImpl @Inject constructor(
                 val vns = visualNovelApiService.getVisualNovels(
                     requestBodyVisualNovel = RequestBodyVisualNovel(
                         page = page,
-                        fields = "title, image.url, image.thumbnail, image.sexual, description",
+                        fields = ApiConstants.FIELDS,
                         filters = emptyList()
                     )
                 )
-                val entities = vns.body()!!.results.map { it.toEntity(page = page) }
-                visualNovelDao.insertVisualNovels(vns = entities)
+                vns.body()?.results.let { results ->
+                    val entities = results?.map { it.toEntity(page = page) }
+                    visualNovelDao.insertVisualNovels(vns = entities ?: emptyList())
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }

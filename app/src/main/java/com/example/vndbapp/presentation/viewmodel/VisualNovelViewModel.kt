@@ -3,6 +3,7 @@ package com.example.vndbapp.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vndbapp.data.local.entity.VisualNovelEntity
+import com.example.vndbapp.data.local.repository.LocalVisualNovelRepository
 import com.example.vndbapp.data.local.repository.LocalVisualNovelRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,13 +17,13 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class VisualNovelViewModel @Inject constructor(
-    private val localVisualNovelRepositoryImpl: LocalVisualNovelRepositoryImpl
+    private val localVisualNovelRepository: LocalVisualNovelRepository
 ) : ViewModel() {
     private val _currentPage = MutableStateFlow(0)
 
     val currentPageVns: StateFlow<List<VisualNovelEntity>> =
         _currentPage.flatMapLatest { page ->
-            localVisualNovelRepositoryImpl.getVisualNovelsByPage(
+            localVisualNovelRepository.getVisualNovelsByPage(
                 page = page
             )
         }.stateIn(
