@@ -1,5 +1,6 @@
 package com.example.vndbapp.data.model
 
+import com.squareup.moshi.Json
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +17,6 @@ data class RequestBodyVisualNovel(
     val filters: List<String>
 )
 
-
 data class VisualNovelResponse(
     val results: List<VisualNovel>,
     val more: Boolean
@@ -25,5 +25,7 @@ data class VisualNovelResponse(
 @Serializable
 data class Image(
     val url: String? = null,
-    val thumbnail: String? = null
+    val thumbnail: String? = null,
+    @param:Json(name = "sexual")
+    val explicit: Double
 )

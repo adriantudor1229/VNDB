@@ -1,7 +1,7 @@
 package com.example.vndbapp.di
 
-import com.example.vndbapp.data.remote.repository.VisualNovelRepository
-import com.example.vndbapp.data.remote.repository.VisualNovelRepositoryImpl
+import com.example.vndbapp.domain.repository.VisualNovelRepository
+import com.example.vndbapp.data.local.repository.VisualNovelRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
