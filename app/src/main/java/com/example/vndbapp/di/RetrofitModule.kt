@@ -1,6 +1,7 @@
 package com.example.vndbapp.di
 
 import com.example.vndbapp.data.remote.api.VisualNovelApiService
+import com.example.vndbapp.domain.utils.ApiConstants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -24,7 +25,7 @@ object RetrofitModule {
     @Provides
     @Singleton
     fun provideRetrofit(moshi: Moshi): Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.vndb.org/kana/")
+        .baseUrl(ApiConstants.BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create(moshi).asLenient())
         .build()
 

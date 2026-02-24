@@ -17,7 +17,6 @@ data class RequestBodyVisualNovel(
     val filters: List<String>
 )
 
-
 data class VisualNovelResponse(
     val results: List<VisualNovel>,
     val more: Boolean

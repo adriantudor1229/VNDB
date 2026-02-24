@@ -1,9 +1,7 @@
 package com.example.vndbapp.di
 
-import com.example.vndbapp.data.local.repository.LocalVisualNovelRepository
-import com.example.vndbapp.data.local.repository.LocalVisualNovelRepositoryImpl
-import com.example.vndbapp.data.remote.repository.VisualNovelRepository
-import com.example.vndbapp.data.remote.repository.VisualNovelRepositoryImpl
+import com.example.vndbapp.domain.repository.VisualNovelRepository
+import com.example.vndbapp.data.local.repository.VisualNovelRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,10 +17,4 @@ abstract class AppModule {
     abstract fun bindVisualNovelRepository(
         visualNovelRepositoryImpl: VisualNovelRepositoryImpl
     ): VisualNovelRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindLocalVisualNovelRepository(
-        localVisualNovelRepositoryImpl: LocalVisualNovelRepositoryImpl
-    ): LocalVisualNovelRepository
 }

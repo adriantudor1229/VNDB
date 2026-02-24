@@ -2,9 +2,10 @@ package com.example.vndbapp.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vndbapp.data.local.entity.VisualNovelEntity
-import com.example.vndbapp.data.local.repository.LocalVisualNovelRepository
-import com.example.vndbapp.data.local.repository.LocalVisualNovelRepositoryImpl
+import com.example.vndbapp.data.model.Resource
+import com.example.vndbapp.data.model.VisualNovel
+import com.example.vndbapp.domain.usecase.GetVisualNovelsByPageUseCase
+import com.example.vndbapp.domain.utils.PresentationConstants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +18,17 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class VisualNovelViewModel @Inject constructor(
-    private val localVisualNovelRepository: LocalVisualNovelRepository
+    private val getVisualNovelsByPageUseCase: GetVisualNovelsByPageUseCase
 ) : ViewModel() {
-    private val _currentPage = MutableStateFlow(0)
+    private val _currentPage = MutableStateFlow(value = 0)
 
-    val currentPageVns: StateFlow<List<VisualNovelEntity>> =
+    val currentPageVns: StateFlow<Resource<List<VisualNovel>>> =
         _currentPage.flatMapLatest { page ->
-            localVisualNovelRepository.getVisualNovelsByPage(
-                page = page
-            )
+            getVisualNovelsByPageUseCase(page = page)
         }.stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = PresentationConstants.STATE_RETENTION_TIMEOUT_MS),
+            initialValue = Resource.Loading
         )
 
     fun loadPage(

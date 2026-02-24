@@ -1,6 +1,7 @@
 package com.example.vndbapp.presentation.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -8,22 +9,25 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.vndbapp.data.mapper.toModel
+import com.example.vndbapp.data.model.Resource
 import com.example.vndbapp.data.model.VisualNovel
-import com.example.vndbapp.presentation.viewmodel.VisualNovelViewModel
+import com.example.vndbapp.domain.utils.PresentationConstants
 import com.example.vndbapp.presentation.components.ImageCard
+import com.example.vndbapp.presentation.viewmodel.VisualNovelViewModel
 
 @Composable
 fun VisualNovelScreen(
     modifier: Modifier = Modifier,
-
     onNavigateToDetail: (VisualNovel) -> Unit
 ) {
 
@@ -39,33 +43,59 @@ private fun VisualNovelListContent(
     onNavigateToDetail: (VisualNovel) -> Unit,
     viewModel: VisualNovelViewModel = hiltViewModel(),
 ) {
-    val pagerState = rememberPagerState(pageCount = { 10 }, initialPage = 0)
-    val visualNovels by viewModel.currentPageVns.collectAsState()
+    val pagerState = rememberPagerState(
+        pageCount = { PresentationConstants.MAX_PAGES },
+        initialPage = PresentationConstants.INITIAL_PAGE
+    )
+    val resource by viewModel.currentPageVns.collectAsState()
 
-    LaunchedEffect(pagerState.currentPage) {
+    LaunchedEffect(key1 = pagerState.currentPage) {
         val pageNumber = pagerState.currentPage + 1
-        viewModel.loadPage(
-            page = pageNumber,
-        )
+        viewModel.loadPage(page = pageNumber)
     }
 
     HorizontalPager(
         state = pagerState,
         modifier = modifier
     ) { page ->
-        if (visualNovels.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+        when (resource) {
+            is Resource.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        } else {
-            VisualNovelGrid(
-                visualNovels = visualNovels.map { it.toModel() },
-                onNavigateToDetail = onNavigateToDetail,
-                modifier = modifier
-            )
+
+            is Resource.Success -> {
+                val visualNovels = (resource as Resource.Success).data
+                VisualNovelGrid(
+                    modifier = modifier,
+                    visualNovels = visualNovels,
+                    onNavigateToDetail = onNavigateToDetail
+                )
+            }
+
+            is Resource.Error -> {
+                val error = resource as Resource.Error
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            text = "Error loading visual novels",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = error.message,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
+
         }
     }
 }
@@ -76,8 +106,9 @@ fun VisualNovelGrid(
     visualNovels: List<VisualNovel>,
     onNavigateToDetail: (VisualNovel) -> Unit,
 ) {
-    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-        items(visualNovels.filter { it.image.explicit < 0.4 }) { vn ->
+
+    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = PresentationConstants.GRID_MIN_COLUMN_SIZE_DP.dp)) {
+        items(items = visualNovels) { vn ->
             ImageCard(
                 imageUrl = vn.image.url ?: "",
                 vnId = vn.id,
