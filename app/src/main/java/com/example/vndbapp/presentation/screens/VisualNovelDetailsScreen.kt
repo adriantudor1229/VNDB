@@ -57,7 +57,8 @@ fun VisualNovelDetailScreenPreview() = VisualNovelDetailScreen(
         title = "Clannad",
         image = Image(
             url = "",
-            thumbnail = ""
+            thumbnail = "",
+            explicit = 0.0
         ),
         id = "1",
         description = "Mock description"

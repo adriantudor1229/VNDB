@@ -26,6 +26,9 @@ data class VisualNovelEntity(
     @ColumnInfo(name = "thumbnail_url")
     val thumbnailUrl: String? = null,
 
+    @ColumnInfo(name = "explicit")
+    val explicit: Double,
+
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis()
 )
