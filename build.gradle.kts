@@ -5,4 +5,6 @@ plugins {
     alias(libs.plugins.hiltAndroid) apply false
     alias(libs.plugins.kotlinAndroidKsp) apply false
     alias(libs.plugins.kotlin.android) apply false
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0" apply false
+    id("io.gitlab.arturbosch.detekt") version "1.23.6" apply false
 }
