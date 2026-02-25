@@ -8,7 +8,7 @@ import com.example.vndbapp.data.local.entity.VisualNovelEntity
 @Database(
     entities = [VisualNovelEntity::class],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 
 abstract class VisualNovelDatabase : RoomDatabase() {
