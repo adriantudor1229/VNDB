@@ -8,18 +8,18 @@ data class VisualNovel(
     val title: String,
     val image: Image,
     val id: String,
-    val description: String
+    val description: String,
 )
 
 data class RequestBodyVisualNovel(
     val fields: String,
     val page: Int,
-    val filters: List<String>
+    val filters: List<String>,
 )
 
 data class VisualNovelResponse(
     val results: List<VisualNovel>,
-    val more: Boolean
+    val more: Boolean,
 )
 
 @Serializable
@@ -27,5 +27,5 @@ data class Image(
     val url: String? = null,
     val thumbnail: String? = null,
     @param:Json(name = "sexual")
-    val explicit: Double
+    val explicit: Double,
 )

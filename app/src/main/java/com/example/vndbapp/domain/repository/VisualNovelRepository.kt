@@ -5,8 +5,5 @@ import com.example.vndbapp.data.model.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface VisualNovelRepository {
-
-    fun getVisualNovelsByPage(
-        page: Int,
-    ): Flow<Resource<List<VisualNovelEntity>>>
+    fun getVisualNovelsByPage(page: Int): Flow<Resource<List<VisualNovelEntity>>>
 }

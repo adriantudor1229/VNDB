@@ -15,10 +15,11 @@ import com.example.vndbapp.data.model.VisualNovel
 @Composable
 fun DescriptionScreen(visualNovel: VisualNovel) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(all = 16.dp)
-            .verticalScroll(state = rememberScrollState())
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(all = 16.dp)
+                .verticalScroll(state = rememberScrollState()),
     ) {
         Text(text = visualNovel.description.stripBBCode())
     }

@@ -14,16 +14,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideVndbDatabase(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): VisualNovelDatabase {
         return Room.databaseBuilder(
             context,
             VisualNovelDatabase::class.java,
-            VisualNovelDatabase.DATABASE_NAME
+            VisualNovelDatabase.DATABASE_NAME,
         )
             .fallbackToDestructiveMigration(false) // For development - remove in production
             // .addMigrations(Migration1To2)  // Uncomment for production migrations
@@ -32,9 +31,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideVisualNovelDao(
-        database: VisualNovelDatabase
-    ): VisualNovelDao {
+    fun provideVisualNovelDao(database: VisualNovelDatabase): VisualNovelDao {
         return database.visualNovelDao()
     }
 }

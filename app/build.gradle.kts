@@ -28,7 +28,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -45,11 +45,9 @@ android {
 }
 
 dependencies {
-    //hilt
+    // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
-
 
     // Room
     val roomVersion = "2.8.4"
@@ -63,6 +61,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.2")
+
     // Network - JSON (Gson)
     implementation(libs.gson)
 
@@ -72,14 +71,15 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
     implementation(libs.converter.moshi)
 
-
     // Source: https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     // Navigation 3
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.core)
+
     // Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation("io.coil-kt:coil-compose:2.7.0")

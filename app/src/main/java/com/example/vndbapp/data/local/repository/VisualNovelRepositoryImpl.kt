@@ -17,45 +17,47 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class VisualNovelRepositoryImpl @Inject constructor(
-    private val visualNovelDao: VisualNovelDao,
-    private val visualNovelApiService: VisualNovelApiService
-) : VisualNovelRepository {
+class VisualNovelRepositoryImpl
+    @Inject
+    constructor(
+        private val visualNovelDao: VisualNovelDao,
+        private val visualNovelApiService: VisualNovelApiService,
+    ) : VisualNovelRepository {
+        override fun getVisualNovelsByPage(page: Int): Flow<Resource<List<VisualNovelEntity>>> =
+            flow {
+                emit(value = Resource.Loading)
 
-    override fun getVisualNovelsByPage(
-        page: Int,
-    ): Flow<Resource<List<VisualNovelEntity>>> = flow {
-        emit(value = Resource.Loading)
+                val cachedCount = visualNovelDao.getPageCount(page)
 
-        val cachedCount = visualNovelDao.getPageCount(page)
-
-        if (cachedCount == 0) {
-            try {
-                val response = visualNovelApiService.getVisualNovels(
-                    requestBodyVisualNovel = RequestBodyVisualNovel(
-                        page = page,
-                        fields = ApiConstants.FIELDS,
-                        filters = emptyList()
-                    )
-                )
-                if (response.isSuccessful && response.body() != null) {
-                    val results = response.body()!!.results
-                    val entities = results.map { it.toEntity(page = page) }
-                    visualNovelDao.insertVisualNovels(vns = entities)
-                } else {
-                    val errorMessage = "API Error: ${response.code()} - ${response.message()}"
-                    emit(Resource.Error(errorMessage))
-                    return@flow
+                if (cachedCount == 0) {
+                    try {
+                        val response =
+                            visualNovelApiService.getVisualNovels(
+                                requestBodyVisualNovel =
+                                    RequestBodyVisualNovel(
+                                        page = page,
+                                        fields = ApiConstants.FIELDS,
+                                        filters = emptyList(),
+                                    ),
+                            )
+                        if (response.isSuccessful && response.body() != null) {
+                            val results = response.body()!!.results
+                            val entities = results.map { it.toEntity(page = page) }
+                            visualNovelDao.insertVisualNovels(vns = entities)
+                        } else {
+                            val errorMessage = "API Error: ${response.code()} - ${response.message()}"
+                            emit(Resource.Error(errorMessage))
+                            return@flow
+                        }
+                    } catch (e: IOException) {
+                        emit(Resource.Error(message = "Network error: ${e.message}", cause = e))
+                        return@flow
+                    } catch (e: HttpException) {
+                        emit(Resource.Error(message = "HTTP error: ${e.message}", cause = e))
+                        return@flow
+                    }
                 }
-            } catch (e: IOException) {
-                emit(Resource.Error(message = "Network error: ${e.message}", cause = e))
-                return@flow
-            } catch (e: HttpException) {
-                emit(Resource.Error(message = "HTTP error: ${e.message}", cause = e))
-                return@flow
-            }
-        }
-        val data = visualNovelDao.getVisualNovelsByPage(page = page).first()
-        emit(value = Resource.Success(data))
-    }.flowOn(context = Dispatchers.IO)
-}
+                val data = visualNovelDao.getVisualNovelsByPage(page = page).first()
+                emit(value = Resource.Success(data))
+            }.flowOn(context = Dispatchers.IO)
+    }
