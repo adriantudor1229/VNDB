@@ -1,0 +1,8 @@
+style:
+  MagicNumber:
+    active: true
+    excludes:
+      - '**/ui/theme/**'
+      - '**/Theme.kt'
+      - '**/Color.kt'
+      - '**/Type.kt'

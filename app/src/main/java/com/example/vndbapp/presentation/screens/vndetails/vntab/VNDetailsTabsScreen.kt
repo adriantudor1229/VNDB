@@ -18,13 +18,9 @@ import com.example.vndbapp.data.model.VisualNovel
 import com.example.vndbapp.presentation.screens.vndetails.DescriptionScreen
 import com.example.vndbapp.presentation.screens.vndetails.VisualNovelDetailScreen
 
-enum class AppTab(val title: String, val icon: ImageVector) {
-    DEFAULT(title = "Default", Icons.Default.Home),
-    DESCRIPTION(title = "Description", Icons.Default.Home)
-}
 
 @Composable
-fun TabScreen(modifier: Modifier = Modifier, visualNovel: VisualNovel) {
+fun VNDetailsTabsScreen(modifier: Modifier = Modifier, visualNovel: VisualNovel) {
     var selectedTab by remember { mutableStateOf(value = AppTab.DEFAULT) }
 
     Column {
@@ -48,4 +44,8 @@ fun TabScreen(modifier: Modifier = Modifier, visualNovel: VisualNovel) {
             AppTab.DESCRIPTION -> DescriptionScreen(visualNovel = visualNovel)
         }
     }
+}
+enum class AppTab(val title: String, val icon: ImageVector) {
+    DEFAULT(title = "Default", Icons.Default.Home),
+    DESCRIPTION(title = "Description", Icons.Default.Home)
 }

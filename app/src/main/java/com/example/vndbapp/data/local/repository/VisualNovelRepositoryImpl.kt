@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class VisualNovelRepositoryImpl @Inject constructor(
@@ -45,16 +47,12 @@ class VisualNovelRepositoryImpl @Inject constructor(
                     emit(Resource.Error(errorMessage))
                     return@flow
                 }
-            } catch (e: java.io.IOException) {
+            } catch (e: IOException) {
                 emit(Resource.Error(message = "Network error: ${e.message}", cause = e))
                 return@flow
-            } catch (e: retrofit2.HttpException) {
+            } catch (e: HttpException) {
                 emit(Resource.Error(message = "HTTP error: ${e.message}", cause = e))
                 return@flow
-            } catch (e: Exception) {
-                emit(Resource.Error(message = "Unexpected error: ${e.message}", cause = e))
-                return@flow
-
             }
         }
         val data = visualNovelDao.getVisualNovelsByPage(page = page).first()
