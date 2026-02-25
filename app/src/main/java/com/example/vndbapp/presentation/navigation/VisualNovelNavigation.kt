@@ -17,8 +17,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.vndbapp.data.model.VisualNovel
-import com.example.vndbapp.presentation.screens.vndetails.vntab.VNDetailsTabsScreen
 import com.example.vndbapp.presentation.screens.VisualNovelScreen
+import com.example.vndbapp.presentation.screens.vndetails.vntab.VNDetailsTabsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,43 +34,44 @@ fun NavScreen() {
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
-        entryProvider = entryProvider {
-            entry<VisualNovelList> {
-                Scaffold(
-                    topBar = { TopAppBar(title = { Text("Visual Novels") }) }
-                ) { paddingValues ->
-                    Box(modifier = Modifier.padding(paddingValues)) {
-                        VisualNovelScreen(
-                            onNavigateToDetail = {
-                                backStack.add(VisualNovelDetail(it))
-                            }
-                        )
+        entryProvider =
+            entryProvider {
+                entry<VisualNovelList> {
+                    Scaffold(
+                        topBar = { TopAppBar(title = { Text("Visual Novels") }) },
+                    ) { paddingValues ->
+                        Box(modifier = Modifier.padding(paddingValues)) {
+                            VisualNovelScreen(
+                                onNavigateToDetail = {
+                                    backStack.add(VisualNovelDetail(it))
+                                },
+                            )
+                        }
                     }
                 }
-            }
-            entry<VisualNovelDetail> { details ->
-                Scaffold(
-                    topBar = {
-                        TopAppBar(
-                            title = { Text("Details") },
-                            navigationIcon = {
-                                IconButton(onClick = { backStack.removeLastOrNull() }) {
-                                    Icon(
-                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                        contentDescription = "Back"
-                                    )
-                                }
-                            }
-                        )
-                    }
-                ) { paddingValues ->
-                    Box(modifier = Modifier.padding(paddingValues)) {
-                        VNDetailsTabsScreen(
-                            visualNovel = details.visualNovel
-                        )
+                entry<VisualNovelDetail> { details ->
+                    Scaffold(
+                        topBar = {
+                            TopAppBar(
+                                title = { Text("Details") },
+                                navigationIcon = {
+                                    IconButton(onClick = { backStack.removeLastOrNull() }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = "Back",
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                    ) { paddingValues ->
+                        Box(modifier = Modifier.padding(paddingValues)) {
+                            VNDetailsTabsScreen(
+                                visualNovel = details.visualNovel,
+                            )
+                        }
                     }
                 }
-            }
-        }
+            },
     )
 }

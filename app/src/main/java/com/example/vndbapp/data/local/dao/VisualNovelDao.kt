@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VisualNovelDao {
-
     @Query("SELECT * FROM visual_novels WHERE page = :page")
     fun getVisualNovelsByPage(page: Int): Flow<List<VisualNovelEntity>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVisualNovels(vns: List<VisualNovelEntity>)
 

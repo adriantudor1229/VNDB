@@ -8,7 +8,6 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface VisualNovelApiService {
-
     // Since this is our format we can see that we need to specify header
     // curl https://api.vndb.org/kana/vn --header 'Content-Type: application/json' --data '{
     //    "filters": ["id", "=", "v17"],
@@ -17,6 +16,6 @@ interface VisualNovelApiService {
     @Headers("Content-Type: application/json")
     @POST("vn")
     suspend fun getVisualNovels(
-        @Body requestBodyVisualNovel: RequestBodyVisualNovel
+        @Body requestBodyVisualNovel: RequestBodyVisualNovel,
     ): Response<VisualNovelResponse>
 }

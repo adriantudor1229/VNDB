@@ -12,7 +12,7 @@ fun VisualNovel.toEntity(page: Int): VisualNovelEntity {
         imageUrl = image.url,
         thumbnailUrl = image.thumbnail,
         explicit = image.explicit,
-        page = page
+        page = page,
     )
 }
 
@@ -21,10 +21,11 @@ fun VisualNovelEntity.toModel(): VisualNovel {
         id = id,
         title = title,
         description = description,
-        image = Image(
-            url = imageUrl,
-            thumbnail = thumbnailUrl,
-            explicit = explicit,
-        )
+        image =
+            Image(
+                url = imageUrl,
+                thumbnail = thumbnailUrl,
+                explicit = explicit,
+            ),
     )
 }

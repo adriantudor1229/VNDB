@@ -17,23 +17,23 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class VisualNovelViewModel @Inject constructor(
-    private val getVisualNovelsByPageUseCase: GetVisualNovelsByPageUseCase
-) : ViewModel() {
-    private val _currentPage = MutableStateFlow(value = 0)
+class VisualNovelViewModel
+    @Inject
+    constructor(
+        private val getVisualNovelsByPageUseCase: GetVisualNovelsByPageUseCase,
+    ) : ViewModel() {
+        private val _currentPage = MutableStateFlow(value = 0)
 
-    val currentPageVns: StateFlow<Resource<List<VisualNovel>>> =
-        _currentPage.flatMapLatest { page ->
-            getVisualNovelsByPageUseCase(page = page)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = PresentationConstants.STATE_RETENTION_TIMEOUT_MS),
-            initialValue = Resource.Loading
-        )
+        val currentPageVns: StateFlow<Resource<List<VisualNovel>>> =
+            _currentPage.flatMapLatest { page ->
+                getVisualNovelsByPageUseCase(page = page)
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(stopTimeoutMillis = PresentationConstants.STATE_RETENTION_TIMEOUT_MS),
+                initialValue = Resource.Loading,
+            )
 
-    fun loadPage(
-        page: Int,
-    ) {
-        _currentPage.value = page
+        fun loadPage(page: Int) {
+            _currentPage.value = page
+        }
     }
-}

@@ -28,12 +28,11 @@ import com.example.vndbapp.presentation.viewmodel.VisualNovelViewModel
 @Composable
 fun VisualNovelScreen(
     modifier: Modifier = Modifier,
-    onNavigateToDetail: (VisualNovel) -> Unit
+    onNavigateToDetail: (VisualNovel) -> Unit,
 ) {
-
     VisualNovelListContent(
         onNavigateToDetail = onNavigateToDetail,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -43,10 +42,11 @@ private fun VisualNovelListContent(
     onNavigateToDetail: (VisualNovel) -> Unit,
     viewModel: VisualNovelViewModel = hiltViewModel(),
 ) {
-    val pagerState = rememberPagerState(
-        pageCount = { PresentationConstants.MAX_PAGES },
-        initialPage = PresentationConstants.INITIAL_PAGE
-    )
+    val pagerState =
+        rememberPagerState(
+            pageCount = { PresentationConstants.MAX_PAGES },
+            initialPage = PresentationConstants.INITIAL_PAGE,
+        )
     val resource by viewModel.currentPageVns.collectAsState()
 
     LaunchedEffect(key1 = pagerState.currentPage) {
@@ -56,13 +56,13 @@ private fun VisualNovelListContent(
 
     HorizontalPager(
         state = pagerState,
-        modifier = modifier
+        modifier = modifier,
     ) { page ->
         when (resource) {
             is Resource.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     CircularProgressIndicator()
                 }
@@ -73,7 +73,7 @@ private fun VisualNovelListContent(
                 VisualNovelGrid(
                     modifier = modifier,
                     visualNovels = visualNovels,
-                    onNavigateToDetail = onNavigateToDetail
+                    onNavigateToDetail = onNavigateToDetail,
                 )
             }
 
@@ -81,21 +81,20 @@ private fun VisualNovelListContent(
                 val error = resource as Resource.Error
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "Error loading visual novels",
-                            color = MaterialTheme.colorScheme.error
+                            color = MaterialTheme.colorScheme.error,
                         )
                         Text(
                             text = error.message,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
             }
-
         }
     }
 }
@@ -106,13 +105,12 @@ fun VisualNovelGrid(
     visualNovels: List<VisualNovel>,
     onNavigateToDetail: (VisualNovel) -> Unit,
 ) {
-
     LazyVerticalGrid(columns = GridCells.Adaptive(minSize = PresentationConstants.GRID_MIN_COLUMN_SIZE_DP.dp)) {
         items(items = visualNovels) { vn ->
             ImageCard(
                 imageUrl = vn.image.url ?: "",
                 onClick = { onNavigateToDetail(vn) },
-                modifier = modifier
+                modifier = modifier,
             )
         }
     }

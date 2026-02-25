@@ -2,10 +2,11 @@ name: Android CI – VNDB
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - 'feature/**'
   pull_request:
-    branches: [ main ]
-
+    branches:
+      - 'feature/**'
 jobs:
   # ── 1. Unit Tests ────────────────────────────────────────────────────────────
   unit-tests:
