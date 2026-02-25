@@ -22,7 +22,6 @@ import com.example.vndbapp.R
 @Composable
 fun ImageCard(
     imageUrl: String,
-    vnId: String,
     onClick: () -> Unit,
     modifier: Modifier
 ) {
