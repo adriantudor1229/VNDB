@@ -17,6 +17,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.vndbapp.data.model.VisualNovel
+import com.example.vndbapp.presentation.screens.TabScreen
 import com.example.vndbapp.presentation.screens.VisualNovelDetailScreen
 import com.example.vndbapp.presentation.screens.VisualNovelScreen
 import kotlinx.serialization.Serializable
@@ -65,9 +66,9 @@ fun NavScreen() {
                     }
                 ) { paddingValues ->
                     Box(modifier = Modifier.padding(paddingValues)) {
-                       VisualNovelDetailScreen(
-                           visualNovel = details.visualNovel
-                       )
+                        TabScreen(
+                            visualNovel = details.visualNovel
+                        )
                     }
                 }
             }
