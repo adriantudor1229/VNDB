@@ -50,7 +50,7 @@ fun VisualNovelDetailScreenPreview() =
     VisualNovelDetailScreen(
         visualNovel =
             VisualNovel(
-                title = "Clannad",
+                title = "Clannad test",
                 image =
                     Image(
                         url = "",
