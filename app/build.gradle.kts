@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 android {
@@ -46,6 +48,8 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+
 
     // Room
     val roomVersion = "2.8.4"
