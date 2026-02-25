@@ -111,7 +111,6 @@ fun VisualNovelGrid(
         items(items = visualNovels) { vn ->
             ImageCard(
                 imageUrl = vn.image.url ?: "",
-                vnId = vn.id,
                 onClick = { onNavigateToDetail(vn) },
                 modifier = modifier
             )
