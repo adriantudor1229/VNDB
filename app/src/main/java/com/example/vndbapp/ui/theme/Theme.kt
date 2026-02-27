@@ -1,59 +1,61 @@
 package com.example.vndbapp.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme =
-    darkColorScheme(
-        primary = Purple80,
-        secondary = PurpleGrey80,
-        tertiary = Pink80,
-    )
+// ── Dark color scheme (primary app experience) ────────────────────────────────
+private val AppDarkColorScheme = darkColorScheme(
+    primary          = Primary,
+    onPrimary        = Color(0xFF0A0A0A),
+    primaryContainer = PrimaryDim,
+    onPrimaryContainer = Primary,
 
-private val LightColorScheme =
-    lightColorScheme(
-        primary = Purple40,
-        secondary = PurpleGrey40,
-        tertiary = Pink40,
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-     */
-    )
+    background       = BgApp,
+    onBackground     = TextPrimary,
 
+    surface          = BgCard,
+    onSurface        = TextPrimary,
+    surfaceVariant   = BgThumb,
+    onSurfaceVariant = TextSecondary,
+
+    outline          = BorderDefault,
+    outlineVariant   = BorderMuted,
+
+    secondary        = TextSecondary,
+    onSecondary      = BgApp,
+    tertiary         = StatusHold,
+    onTertiary       = BgApp,
+
+    error            = Color(0xFFEF4444),
+    onError          = Color.White,
+)
+
+// ── Light scheme (fallback — app is dark-first) ───────────────────────────────
+private val AppLightColorScheme = lightColorScheme(
+    primary          = Color(0xFF0284C7),
+    onPrimary        = Color.White,
+    background       = Color(0xFFF5F7F8),
+    onBackground     = Color(0xFF0F172A),
+    surface          = Color(0xFFFFFFFF),
+    onSurface        = Color(0xFF0F172A),
+)
+
+// ── Theme entry point ─────────────────────────────────────────────────────────
 @Composable
 fun VNDBAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    val colorScheme =
-        when {
-            dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-                val context = LocalContext.current
-                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            }
-
-            darkTheme -> DarkColorScheme
-            else -> LightColorScheme
-        }
+    // Dynamic color intentionally disabled — we own the exact palette
+    val colorScheme = if (darkTheme) AppDarkColorScheme else AppLightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
-        content = content,
+        typography  = Typography,
+        content     = content,
     )
 }

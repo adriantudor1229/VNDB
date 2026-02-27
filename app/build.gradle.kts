@@ -49,6 +49,9 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.0")
+    implementation ("androidx.compose.material:material-icons-extended")
+
     // Room
     val roomVersion = "2.8.4"
     implementation("androidx.room:room-runtime:$roomVersion")

@@ -1,11 +1,12 @@
 package com.example.vndbapp.presentation.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,8 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.vndbapp.data.model.Resource
 import com.example.vndbapp.data.model.VisualNovel
 import com.example.vndbapp.domain.utils.PresentationConstants
-import com.example.vndbapp.presentation.components.ImageCard
 import com.example.vndbapp.presentation.viewmodel.VisualNovelViewModel
+import com.example.vndbapp.ui.components.VNCard
 
 @Composable
 fun VisualNovelScreen(
@@ -105,12 +106,16 @@ fun VisualNovelGrid(
     visualNovels: List<VisualNovel>,
     onNavigateToDetail: (VisualNovel) -> Unit,
 ) {
-    LazyVerticalGrid(columns = GridCells.Adaptive(minSize = PresentationConstants.GRID_MIN_COLUMN_SIZE_DP.dp)) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 16.dp),
+    ) {
         items(items = visualNovels) { vn ->
-            ImageCard(
+            VNCard(
                 imageUrl = vn.image.url ?: "",
                 onClick = { onNavigateToDetail(vn) },
                 modifier = modifier,
+                title = vn.title
             )
         }
     }
