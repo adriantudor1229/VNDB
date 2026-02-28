@@ -2,6 +2,7 @@ package com.example.vndbapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.vndbapp.data.local.dao.CharacterDao
 import com.example.vndbapp.data.local.dao.VisualNovelDao
 import com.example.vndbapp.data.local.database.VisualNovelDatabase
 import dagger.Module
@@ -33,5 +34,11 @@ object DatabaseModule {
     @Singleton
     fun provideVisualNovelDao(database: VisualNovelDatabase): VisualNovelDao {
         return database.visualNovelDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCharacterDao(database: VisualNovelDatabase): CharacterDao {
+        return database.characterDao()
     }
 }
