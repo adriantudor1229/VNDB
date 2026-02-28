@@ -54,7 +54,6 @@ fun VNCard(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
 
-        // ── Circular thumbnail ────────────────────────────────────────────
         AsyncImage(
             model = imageUrl,
             contentDescription = title,
@@ -66,7 +65,6 @@ fun VNCard(
                 .border(1.dp, BorderMuted, CircleShape),
         )
 
-        // ── Text content ──────────────────────────────────────────────────
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(5.dp),
@@ -104,7 +102,6 @@ fun VNCard(
             }
         }
 
-        // ── Chevron ───────────────────────────────────────────────────────
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = "Open",

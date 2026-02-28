@@ -28,6 +28,17 @@ val StatusActive  = Color(0xFF94A3B8)   // %_ACTIVE   → slate-400
 val StatusHold    = Color(0xFFCA8A04)   // ON_HOLD    → yellow-600
 val StatusPending = Color(0xFF475569)   // 0%_PENDING → slate-600
 
+// ── Chat user accent colors ───────────────────────────────────────────────────
+val Pink500        = Color(0xFFEC4899)
+val Pink500Dim     = Color(0x4DEC4899)
+val Pink500Faint   = Color(0x1AEC4899)
+val Emerald500     = Color(0xFF10B981)
+val Emerald500Dim  = Color(0x4D10B981)
+val Emerald500Faint= Color(0x1A10B981)
+val Amber500       = Color(0xFFF59E0B)
+val Amber500Dim    = Color(0x4DF59E0B)
+val Amber500Faint  = Color(0x1AF59E0B)
+
 // ── Legacy (kept so existing files don't break) ───────────────────────────────
 val Purple80      = Color(0xFFD0BCFF)
 val PurpleGrey80  = Color(0xFFCCC2DC)

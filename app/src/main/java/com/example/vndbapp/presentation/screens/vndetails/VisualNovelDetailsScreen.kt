@@ -61,3 +61,5 @@ fun VisualNovelDetailScreenPreview() =
                 description = "Mock description",
             ),
     )
+
+
