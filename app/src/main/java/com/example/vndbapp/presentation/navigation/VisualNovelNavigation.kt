@@ -58,12 +58,28 @@ private val bottomTabs = listOf(
 
 @Composable
 private fun BottomNavBar(currentRoot: NavKey, onTabSelect: (NavKey) -> Unit) {
-    NavigationBar {
+    NavigationBar(
+        containerColor = com.example.vndbapp.ui.theme.BgApp,
+    ) {
         bottomTabs.forEach { tab ->
+            val selected = currentRoot == tab.key
             NavigationBarItem(
-                selected = currentRoot == tab.key,
+                selected = selected,
                 onClick  = { onTabSelect(tab.key) },
-                icon     = { Icon(tab.icon, contentDescription = "") }
+                icon     = {
+                    Icon(
+                        tab.icon,
+                        contentDescription = "",
+                        tint = if (selected) com.example.vndbapp.ui.theme.Primary
+                               else com.example.vndbapp.ui.theme.TextMuted,
+                    )
+                },
+                colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
+                    indicatorColor = androidx.compose.ui.graphics.Color.Transparent,
+                    selectedIconColor = com.example.vndbapp.ui.theme.Primary,
+                    unselectedIconColor = com.example.vndbapp.ui.theme.TextMuted,
+                ),
+                interactionSource = remember { androidx.compose.foundation.interaction.MutableInteractionSource() },
             )
         }
     }
@@ -114,6 +130,7 @@ fun NavScreen() {
 
             entry<VisualNovelList> {
                 Scaffold(
+                    containerColor = com.example.vndbapp.ui.theme.BgApp,
                     topBar = {
                         TopAppBar(
                             title = {
@@ -156,6 +173,7 @@ fun NavScreen() {
 
             entry<Chat> {
                 Scaffold(
+                    containerColor = com.example.vndbapp.ui.theme.BgApp,
                     bottomBar = { BottomNavBar(currentRoot, ::switchTab) }
                 ) { paddingValues ->
                     Box(Modifier.padding(paddingValues)) {
@@ -166,6 +184,7 @@ fun NavScreen() {
 
             entry<UserSettings> {
                 Scaffold(
+                    containerColor = com.example.vndbapp.ui.theme.BgApp,
                     bottomBar = { BottomNavBar(currentRoot, ::switchTab) }
                 ) { paddingValues ->
                     Box(Modifier.padding(paddingValues)) {
@@ -176,9 +195,27 @@ fun NavScreen() {
 
             entry<VisualNovelDetail> { details ->
                 Scaffold(
+                    containerColor = com.example.vndbapp.ui.theme.BgApp,
                     topBar = {
                         TopAppBar(
-                            title = { Text("Details") },
+                            title = {
+                                Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Terminal,
+                                        contentDescription = null,
+                                        tint = com.example.vndbapp.ui.theme.Primary,
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                    Spacer(Modifier.width(10.dp))
+                                    Text(
+                                        text = "ENTRY_VIEWER",
+                                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                        fontSize = 15.sp,
+                                        letterSpacing = 1.sp,
+                                    )
+                                }
+                            },
                             navigationIcon = {
                                 IconButton(onClick = { backStack.removeLastOrNull() }) {
                                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")

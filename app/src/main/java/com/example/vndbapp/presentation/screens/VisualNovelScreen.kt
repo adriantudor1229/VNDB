@@ -99,6 +99,8 @@ private fun VisualNovelListContent(
             .fillMaxSize()
             .background(BgApp)
     ) {
+        Spacer(Modifier.height(12.dp))
+
         // Search bar
         SearchBar(
             query = searchQuery,
