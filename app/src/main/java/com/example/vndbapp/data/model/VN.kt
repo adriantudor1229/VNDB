@@ -17,12 +17,6 @@ data class RequestBodyVisualNovel(
     val filters: List<String>,
 )
 
-data class RequestBodyVisualNovelCharacter(
-    val fields: String,
-    val filters: List<Any>,
-    val result: Int
-)
-
 data class RequestBodyCharacterByVn(
     val fields: String,
     val filters: String,
@@ -42,8 +36,6 @@ data class Image(
     val explicit: Double,
 )
 
-// --- Character models ---
-
 @Serializable
 data class VNCharacter(
     val id: String,
@@ -62,10 +54,4 @@ data class VNCharacterImage(
 data class CharacterResponse(
     val results: List<VNCharacter>,
     val more: Boolean,
-)
-
-data class RequestBodyCharacter(
-    val fields: String,
-    val page: Int,
-    val filters: List<String>,
 )

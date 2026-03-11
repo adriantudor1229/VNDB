@@ -9,7 +9,6 @@ import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.unit.sp
 import com.example.vndbapp.R
 
-// ── Google Fonts provider (reuse the one from DollarsLoginScreen if you prefer)
 private val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage   = "com.google.android.gms",
@@ -24,7 +23,6 @@ val InterFont = FontFamily(
 )
 
 val Typography = Typography(
-    // App title / screen headers
     titleLarge = TextStyle(
         fontFamily   = InterFont,
         fontWeight   = FontWeight.Bold,
@@ -32,7 +30,6 @@ val Typography = Typography(
         lineHeight   = 28.sp,
         letterSpacing = (-0.5).sp,
     ),
-    // Card titles
     titleMedium = TextStyle(
         fontFamily   = InterFont,
         fontWeight   = FontWeight.SemiBold,
@@ -40,7 +37,6 @@ val Typography = Typography(
         lineHeight   = 22.sp,
         letterSpacing = (-0.2).sp,
     ),
-    // Body / list items
     bodyLarge = TextStyle(
         fontFamily   = InterFont,
         fontWeight   = FontWeight.Normal,
@@ -55,7 +51,6 @@ val Typography = Typography(
         lineHeight   = 20.sp,
         letterSpacing = 0.sp,
     ),
-    // Labels / badges / nav
     labelSmall = TextStyle(
         fontFamily   = InterFont,
         fontWeight   = FontWeight.Bold,

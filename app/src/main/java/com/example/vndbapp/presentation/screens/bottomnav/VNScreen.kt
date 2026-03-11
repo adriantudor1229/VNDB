@@ -1,4 +1,4 @@
-package com.example.vndbapp.presentation.screens
+package com.example.vndbapp.presentation.screens.bottomnav
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
