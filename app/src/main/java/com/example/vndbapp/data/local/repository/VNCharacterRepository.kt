@@ -2,6 +2,7 @@ package com.example.vndbapp.data.local.repository
 
 import com.example.vndbapp.data.local.dao.CharacterDao
 import com.example.vndbapp.data.local.entity.CharacterEntity
+import com.example.vndbapp.data.mapper.toEntity
 import com.example.vndbapp.data.model.RequestBodyCharacterByVn
 import com.example.vndbapp.data.model.Resource
 import com.example.vndbapp.data.remote.api.VisualNovelApiService
@@ -29,9 +30,6 @@ class CharacterRepositoryImpl @Inject constructor(
 
             if (cachedCount == 0) {
                 try {
-                    // Build compact filter string for: ["vn", "=", ["id", "=", "v5"]]
-                    // Compact format: N48N{vnId without prefix, zero-padded to 2}
-                    // But easier: just use the JSON array format as a string
                     val filterString = """["vn", "=", ["id", "=", "$vnId"]]"""
 
                     val body = RequestBodyCharacterByVn(
@@ -42,17 +40,7 @@ class CharacterRepositoryImpl @Inject constructor(
                     val response = apiService.getCharactersByVn(requestBody = body)
                     if (response.isSuccessful && response.body() != null) {
                         val results = response.body()!!.results
-                        val entities = results.map { character ->
-                            CharacterEntity(
-                                id = character.id,
-                                vnId = vnId,
-                                name = character.name,
-                                original = character.original,
-                                description = character.description,
-                                imageUrl = character.image?.url,
-                                sexual = character.image?.sexual ?: 0.0,
-                            )
-                        }
+                        val entities = results.map { it.toEntity(vnId) }
                         characterDao.insertCharacters(characters = entities)
                     } else {
                         val errorMessage = "API Error: ${response.code()} - ${response.message()}"

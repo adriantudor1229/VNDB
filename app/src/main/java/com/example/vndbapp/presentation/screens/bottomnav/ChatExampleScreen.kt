@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -83,10 +84,10 @@ sealed class ChatItem {
     data class Message(
         val initial: String,
         val name: String,
-        val nameColor: androidx.compose.ui.graphics.Color,
-        val avatarBorderColor: androidx.compose.ui.graphics.Color,
-        val avatarBgColor: androidx.compose.ui.graphics.Color,
-        val avatarTextColor: androidx.compose.ui.graphics.Color,
+        val nameColor: Color,
+        val avatarBorderColor: Color,
+        val avatarBgColor: Color,
+        val avatarTextColor: Color,
         val time: String,
         val body: String,
     ) : ChatItem()
@@ -427,10 +428,12 @@ private fun InputArea(inputText: String, onTextChange: (String) -> Unit, pulseAl
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Box(Modifier
-                    .size(6.dp)
-                    .clip(CircleShape)
-                    .background(Primary.copy(pulseAlpha)))
+                Box(
+                    Modifier
+                        .size(6.dp)
+                        .clip(CircleShape)
+                        .background(Primary.copy(pulseAlpha))
+                )
                 Text(
                     "Encrypted",
                     fontFamily = Mono,

@@ -21,18 +21,11 @@ private val AppDarkColorScheme = darkColorScheme(
     surfaceVariant     = BgThumb,
     onSurfaceVariant   = TextSecondary,
 
-    // ── NavigationBar uses these roles ───────────────────────────────────────
-    // The bar background comes from `surface`, but NavigationBar also reads
-    // surfaceContainer in M3 — override it to match BgApp:
-    surfaceContainer   = BgApp,                       // ← bar background
+    surfaceContainer   = BgApp,
 
-    // Pill (indicator) behind the selected icon:
-    secondaryContainer = Primary.copy(alpha = 0.15f), // ← indicator color
+    secondaryContainer = Primary.copy(alpha = 0.15f),
 
-    // Selected icon + label tint:
-    onSecondaryContainer = Primary,                   // ← selected tint
-
-    // Unselected icon + label tint comes from onSurfaceVariant (already set above)
+    onSecondaryContainer = Primary,
 
     outline            = BorderDefault,
     outlineVariant     = BorderMuted,

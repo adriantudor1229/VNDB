@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vndbapp.data.model.Resource
 import com.example.vndbapp.data.model.VisualNovel
-import com.example.vndbapp.domain.repository.VisualNovelRepository
 import com.example.vndbapp.domain.usecase.GetVisualNovelsByPageUseCase
 import com.example.vndbapp.domain.utils.PresentationConstants
 import dagger.hilt.android.lifecycle.HiltViewModel

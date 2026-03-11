@@ -21,7 +21,6 @@ import coil.compose.AsyncImage
 import com.example.vndbapp.ui.theme.BgThumb
 import com.example.vndbapp.ui.theme.BorderMuted
 import com.example.vndbapp.ui.theme.TextPrimary
-import com.example.vndbapp.ui.theme.TextMuted
 
 @Composable
 fun CharacterAvatar(

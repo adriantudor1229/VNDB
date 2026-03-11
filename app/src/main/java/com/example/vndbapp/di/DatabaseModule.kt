@@ -25,8 +25,7 @@ object DatabaseModule {
             VisualNovelDatabase::class.java,
             VisualNovelDatabase.DATABASE_NAME,
         )
-            .fallbackToDestructiveMigration(false) // For development - remove in production
-            // .addMigrations(Migration1To2)  // Uncomment for production migrations
+            .fallbackToDestructiveMigration(false)
             .build()
     }
 
