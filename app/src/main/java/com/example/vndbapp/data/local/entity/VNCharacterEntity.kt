@@ -13,6 +13,8 @@ data class CharacterEntity(
     val vnId: String,
     @ColumnInfo(name = "name")
     val name: String,
+    @ColumnInfo(name = "role")
+    val role: String? = null,
     @ColumnInfo(name = "original")
     val original: String? = null,
     @ColumnInfo(name = "description")
@@ -22,5 +24,5 @@ data class CharacterEntity(
     @ColumnInfo(name = "sexual")
     val sexual: Double = 0.0,
     @ColumnInfo(name = "created_at")
-    val createdAt: Long = System.currentTimeMillis(),
+    val createdAt: Long = System.currentTimeMillis()
 )

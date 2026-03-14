@@ -43,6 +43,10 @@ data class VNCharacter(
     val original: String? = null,
     val image: VNCharacterImage? = null,
     val description: String? = null,
+    @Json(name = "vns")
+    val vns: List<CharacterVn> = emptyList(),
+    val role: String? = null
+
 )
 
 @Serializable
@@ -54,4 +58,33 @@ data class VNCharacterImage(
 data class CharacterResponse(
     val results: List<VNCharacter>,
     val more: Boolean,
+)
+
+
+enum class CharacterRole {
+    @Json(name = "main")    MAIN,
+    @Json(name = "primary") PRIMARY,
+    @Json(name = "side")    SIDE,
+    @Json(name = "appears") APPEARS
+}
+
+@Serializable
+data class CharacterVn(
+    @Json(name = "id")
+    val id: String,                 // vndbid, e.g. "v17"
+
+    @Json(name = "spoiler")
+    val spoiler: Int,               // 0, 1, or 2
+
+    @Json(name = "role")
+    val role: CharacterRole,
+
+    @Json(name = "release")
+    val release: Release? = null    // Specific release, usually null
+)
+
+@Serializable
+data class Release(
+    @Json(name = "id")
+    val id: String
 )

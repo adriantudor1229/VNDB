@@ -40,7 +40,12 @@ class CharacterRepositoryImpl @Inject constructor(
                     val response = apiService.getCharactersByVn(requestBody = body)
                     if (response.isSuccessful && response.body() != null) {
                         val results = response.body()!!.results
-                        val entities = results.map { it.toEntity(vnId) }
+                        val entities = results.map { character ->
+                            val role = character.vns
+                                .firstOrNull {it.id == vnId}
+                                ?.role?.name
+                            character.toEntity(vnId = vnId, role = role)
+                        }
                         characterDao.insertCharacters(characters = entities)
                     } else {
                         val errorMessage = "API Error: ${response.code()} - ${response.message()}"

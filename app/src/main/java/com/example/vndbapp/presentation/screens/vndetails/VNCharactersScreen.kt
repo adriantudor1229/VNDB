@@ -1,25 +1,44 @@
 package com.example.vndbapp.presentation.screens.vndetails
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -27,37 +46,61 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import com.example.vndbapp.data.model.CharacterRole
 import com.example.vndbapp.data.model.Resource
 import com.example.vndbapp.data.model.VNCharacter
 import com.example.vndbapp.presentation.viewmodel.VisualNovelDetailViewModel
-import com.example.vndbapp.ui.theme.*
+import com.example.vndbapp.ui.theme.BgApp
+import com.example.vndbapp.ui.theme.TextPrimary
+import com.example.vndbapp.ui.theme.TextSecondary
 import kotlinx.coroutines.delay
-import java.io.Serializable
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THEME TOKENS
-// Using existing project theme colors
 // ─────────────────────────────────────────────────────────────────────────────
 
 private val TermBg = BgApp
 private val TermFg = TextPrimary
 private val TermMuted = TextSecondary
 
-// No filter - images will display in full color
+// ─────────────────────────────────────────────────────────────────────────────
+// ROLE HELPER
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Resolves a character's role for a given VN ID and converts it to a
+ * terminal-style display label.
+ */
+private fun VNCharacter.roleForVn(vnId: String): String {
+    val role = vns.firstOrNull { it.id == vnId }?.role
+        ?: vns.firstOrNull()?.role
+        ?: role?.let {
+            runCatching {
+                CharacterRole.valueOf(it.uppercase())
+            }.getOrNull()
+        }
+    return when (role) {
+        CharacterRole.MAIN -> "PROTAGONIST"
+        CharacterRole.PRIMARY -> "PRIMARY_CAST"
+        CharacterRole.SIDE -> "SIDE_CAST"
+        CharacterRole.APPEARS -> "APPEARS"
+        else -> "UNKNOWN"
+    }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MODIFIER EXTENSIONS
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Thin 1dp white border that wraps any composable — matches .terminal-border */
+/** Thin 1dp border that wraps any composable */
 fun Modifier.terminalBorder(): Modifier = border(1.dp, TermFg)
 
-/** Left-edge 2dp white accent line — matches CSS border-l-2 */
+/** Left-edge 2dp accent line */
 fun Modifier.terminalLeftBorder(
     color: Color = TermFg,
-    width: Dp = 2.dp
+    width: Dp = 2.dp,
 ): Modifier = drawBehind {
     drawLine(
         color = color,
@@ -71,18 +114,6 @@ fun Modifier.terminalLeftBorder(
 // 1. MAIN SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Root screen composable.
- *
- * Usage:
- *   VNCharactersScreen(
- *       visualNovelId = vnId,
- *       viewModel = viewModel
- *   )
- *
- * @param visualNovelId The ID of the visual novel to display characters for.
- * @param ViewModel to load character data.
- */
 @Composable
 fun VNCharactersScreen(
     visualNovelId: String,
@@ -94,20 +125,22 @@ fun VNCharactersScreen(
         viewModel.loadCharacters(visualNovelId)
     }
 
-    // For now, use placeholder data - in a real implementation you'd extract protagonist
+    // Find the protagonist by role "main" for this specific VN
     val protagonist = when (characters) {
-        is Resource.Success -> (characters as Resource.Success<List<VNCharacter>>).data.firstOrNull()
+        is Resource.Success -> (characters as Resource.Success<List<VNCharacter>>)
+            .data
+            .firstOrNull { it.vns.find { it.id == visualNovelId }?.role == CharacterRole.MAIN }
         else -> null
     }
 
     val synopsis = "Divergence ratio: 1.048596. The timeline remains unstable. " +
-                   "Worldline shifts are imminent. [RECORD ENDS]"
+            "Worldline shifts are imminent. [RECORD ENDS]"
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(TermBg)
     ) {
-        // Purely decorative — sits above the background, below content
         ScanlineOverlay()
 
         Column(
@@ -117,8 +150,8 @@ fun VNCharactersScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TerminalHeader()
-            ProtagonistDossier(character = protagonist)
-            VnCharactersParts(characters = characters)
+            ProtagonistDossier(character = protagonist, vnId = visualNovelId)
+            VnCharactersParts(characters = characters, vnId = visualNovelId)
             SynopsisLog(fullText = synopsis)
             TerminalFooter()
         }
@@ -130,13 +163,11 @@ fun VNCharactersScreen(
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
-fun TerminalHeader(
-) {
+fun TerminalHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .drawBehind {
-                // Only a bottom divider line, no full box border
                 drawLine(
                     color = TermFg,
                     start = Offset(0f, size.height),
@@ -162,16 +193,8 @@ fun TerminalHeader(
 // 3. PROTAGONIST DOSSIER
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Large featured-character block with portrait + stats.
- *
- * Field mapping — adjust to match your actual VNCharacter data class:
- *   character.name       → displayed as NAME
- *   character.image?.url → portrait
- *   character.description → used for empty state
- */
 @Composable
-fun ProtagonistDossier(character: VNCharacter?) {
+fun ProtagonistDossier(character: VNCharacter?, vnId: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,7 +202,8 @@ fun ProtagonistDossier(character: VNCharacter?) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        TerminalSectionLabel(text = "PROTAGONIST")
+        // Section label is dynamic — shows actual role or fallback
+        TerminalSectionLabel(text = character?.roleForVn(vnId) ?: "PROTAGONIST")
 
         if (character == null) {
             Text(
@@ -195,18 +219,18 @@ fun ProtagonistDossier(character: VNCharacter?) {
             horizontalArrangement = Arrangement.spacedBy(24.dp),
             verticalAlignment = Alignment.Top
         ) {
-            // ── Portrait ─────────────────────────────────────────────────────
+            // Portrait
             AsyncImage(
                 model = character.image?.url,
                 contentDescription = character.name,
                 contentScale = ContentScale.Crop,
-                                modifier = Modifier
+                modifier = Modifier
                     .size(128.dp)
                     .terminalBorder()
                     .padding(4.dp)
             )
 
-            // ── Stats ─────────────────────────────────────────────────────────
+            // Stats
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
                     text = "NAME: ${character.name.uppercase()}",
@@ -216,8 +240,8 @@ fun ProtagonistDossier(character: VNCharacter?) {
                     color = TermFg
                 )
                 TerminalStatBlock(
-                    "ID" to "001-ALPHA"
-                    // Placeholder - no role field in data model
+                    "ID" to character.id.uppercase(),
+                    "ROLE" to character.roleForVn(vnId)
                 )
             }
         }
@@ -225,15 +249,11 @@ fun ProtagonistDossier(character: VNCharacter?) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. CHARACTERS SECTION  (your existing composable, terminal-styled)
+// 4. CHARACTERS SECTION
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Wraps your original VNCharactersSection logic inside a terminal-bordered card.
- * All Resource states and the LazyRow are preserved exactly as you had them.
- */
 @Composable
-fun VnCharactersParts(characters: Resource<List<VNCharacter>>) {
+fun VnCharactersParts(characters: Resource<List<VNCharacter>>, vnId: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -255,7 +275,8 @@ fun VnCharactersParts(characters: Resource<List<VNCharacter>>) {
             }
 
             is Resource.Success -> {
-                val charList = characters.data
+                // Exclude the protagonist (role "main") from this list
+                val charList = characters.data.filter { it.vns.find { it.id == vnId }?.role != CharacterRole.MAIN }
 
                 if (charList.isEmpty()) {
                     Text(
@@ -271,15 +292,12 @@ fun VnCharactersParts(characters: Resource<List<VNCharacter>>) {
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp)
                     ) {
-                        // Add section label as the first item
                         item {
                             TerminalSectionLabel(text = "SUPPORTING_CAST")
                             Spacer(Modifier.height(12.dp))
                         }
-
-                        // Add all character cards
                         items(charList) { character ->
-                            SupportingCharacterCard(character = character)
+                            SupportingCharacterCard(character = character, vnId = vnId)
                         }
                     }
                 }
@@ -299,23 +317,21 @@ fun VnCharactersParts(characters: Resource<List<VNCharacter>>) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 5. SYNOPSIS LOG  (typewriter effect)
+// 5. SYNOPSIS LOG (typewriter effect)
 // ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
 fun SynopsisLog(fullText: String) {
-    // Reveal text character-by-character
     var displayed by remember(fullText) { mutableStateOf("") }
 
     LaunchedEffect(fullText) {
-        delay(800L) // initial pause before typing starts
+        delay(800L)
         fullText.forEachIndexed { i, _ ->
             displayed = fullText.substring(0, i + 1)
-            delay(45L) // typing speed — lower = faster
+            delay(45L)
         }
     }
 
-    // Blinking block cursor
     var cursorVisible by remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -338,7 +354,6 @@ fun SynopsisLog(fullText: String) {
             fontWeight = FontWeight.Bold,
             color = TermFg
         )
-
         Text(
             text = displayed + if (cursorVisible) "█" else " ",
             fontFamily = FontFamily.Monospace,
@@ -381,10 +396,6 @@ fun TerminalFooter() {
 // 7. SHARED ATOMS
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Animated diagonal scanline that drifts down the screen.
- * Drawn on a full-size Canvas — keep it at the bottom of the Box stack.
- */
 @Composable
 fun ScanlineOverlay() {
     val transition = rememberInfiniteTransition(label = "scanline")
@@ -409,10 +420,6 @@ fun ScanlineOverlay() {
     }
 }
 
-/**
- * White-on-black inverted label pill — e.g. "PROTAGONIST", "SUPPORTING_CAST".
- * Matches the `bg-white text-black` heading style from the HTML.
- */
 @Composable
 fun TerminalSectionLabel(text: String) {
     Text(
@@ -428,12 +435,8 @@ fun TerminalSectionLabel(text: String) {
     )
 }
 
-/**
- * Vertical list of KEY: VALUE stat lines.
- * Pass any number of pairs, e.g.  "ID" to "001-ALPHA"
- */
 @Composable
-fun TerminalStatBlock(entries1: Serializable, vararg entries: Pair<String, String>) {
+fun TerminalStatBlock(vararg entries: Pair<String, String>) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         entries.forEach { (key, value) ->
             Text(
@@ -447,14 +450,10 @@ fun TerminalStatBlock(entries1: Serializable, vararg entries: Pair<String, Strin
     }
 }
 
-/**
- * Small icon button with a 1dp white border.
- * @param label  Single glyph rendered as the button icon.
- */
 @Composable
 fun TerminalIconButton(
     onClick: () -> Unit,
-    label: String
+    label: String,
 ) {
     Box(
         modifier = Modifier
@@ -472,12 +471,8 @@ fun TerminalIconButton(
     }
 }
 
-/**
- * Supporting character card with portrait + stats in a column layout.
- * Similar to ProtagonistDossier but smaller and for multiple characters.
- */
 @Composable
-fun SupportingCharacterCard(character: VNCharacter) {
+fun SupportingCharacterCard(character: VNCharacter, vnId: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -489,18 +484,15 @@ fun SupportingCharacterCard(character: VNCharacter) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.Top
         ) {
-            // Portrait
             AsyncImage(
                 model = character.image?.url,
                 contentDescription = character.name,
                 contentScale = ContentScale.Crop,
-                                modifier = Modifier
+                modifier = Modifier
                     .size(80.dp)
                     .terminalBorder()
                     .padding(2.dp)
             )
-
-            // Character info
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
                     text = "NAME: ${character.name.uppercase()}",
@@ -510,8 +502,8 @@ fun SupportingCharacterCard(character: VNCharacter) {
                     color = TermFg
                 )
                 TerminalStatBlock(
-                    "ID" to character.takeIf { it.id.isNotEmpty() }?.id?.uppercase() ?: "N/A",
-                    "ROLE" to "SUPPORTING", // Placeholder - no role field in data model
+                    "ID" to character.id.uppercase(),
+                    "ROLE" to character.roleForVn(vnId),   // dynamic
                     "STATUS" to "ACTIVE"
                 )
             }
@@ -519,12 +511,6 @@ fun SupportingCharacterCard(character: VNCharacter) {
     }
 }
 
-/**
- * Single character card used inside the LazyRow (kept for potential future use).
- *
- * This replaces / merges with your existing CharacterAvatar.
- * Left-border accent + grayscale portrait + name label underneath.
- */
 @Composable
 fun CharacterAvatar(name: String, imageUrl: String) {
     Column(
@@ -539,7 +525,7 @@ fun CharacterAvatar(name: String, imageUrl: String) {
             model = imageUrl,
             contentDescription = name,
             contentScale = ContentScale.Crop,
-                        modifier = Modifier
+            modifier = Modifier
                 .size(40.dp)
                 .terminalBorder()
         )
