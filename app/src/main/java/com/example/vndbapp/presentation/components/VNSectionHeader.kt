@@ -1,5 +1,6 @@
 package com.example.vndbapp.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,7 +18,11 @@ import com.example.vndbapp.ui.theme.Primary
 import com.example.vndbapp.ui.theme.TextPrimary
 
 @Composable
-fun SectionHeader(title: String) {
+fun SectionHeader(
+    title: String,
+    onClick: (() -> Unit)? = null,
+
+) {
 
     Row(
         modifier = Modifier
@@ -30,7 +35,10 @@ fun SectionHeader(title: String) {
                     4.dp.toPx()
                 )
             }
-            .padding(start = 12.dp),
+            .padding(start = 12.dp)
+            .let { modifier ->
+                onClick?.let { modifier.clickable { onClick() } } ?: modifier
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
 

@@ -46,6 +46,7 @@ import com.example.vndbapp.presentation.screens.bottomnav.VisualNovelScreen
 import com.example.vndbapp.presentation.screens.bottomnav.DollarsChatScreen
 import com.example.vndbapp.presentation.screens.bottomnav.SettingsScreen
 import com.example.vndbapp.presentation.screens.vndetails.VisualNovelDetailScreen
+import com.example.vndbapp.presentation.screens.vndetails.VNCharactersScreen
 import com.example.vndbapp.ui.theme.BgApp
 import com.example.vndbapp.ui.theme.Primary
 import com.example.vndbapp.ui.theme.TextMuted
@@ -65,6 +66,9 @@ data object UserSettings : NavKey
 
 @Serializable
 data class VisualNovelDetail(val visualNovel: VisualNovel) : NavKey
+
+@Serializable
+data class VNCharactersDetail(val visualNovelId: String) : NavKey
 
 private data class BottomTab(val key: NavKey, val icon: ImageVector)
 
@@ -250,7 +254,54 @@ fun NavScreen() {
                     }
                 ) { paddingValues ->
                     Box(Modifier.padding(paddingValues)) {
-                        VisualNovelDetailScreen(visualNovel = details.visualNovel)
+                        VisualNovelDetailScreen(
+                            visualNovel = details.visualNovel,
+                            onNavigateToCharacters = { visualNovelId ->
+                                backStack.add(VNCharactersDetail(visualNovelId))
+                            }
+                        )
+                    }
+                }
+            }
+
+            entry<VNCharactersDetail> { details ->
+                Scaffold(
+                    containerColor = BgApp,
+                    topBar = {
+                        TopAppBar(
+                            title = {
+                                Row(verticalAlignment = CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Terminal,
+                                        contentDescription = null,
+                                        tint = Primary,
+                                        modifier = Modifier.size(20.dp),
+                                    )
+                                    Spacer(Modifier.width(10.dp))
+                                    Text(
+                                        text = "CHARACTER_VIEWER",
+                                        fontFamily = Monospace,
+                                        fontWeight = Bold,
+                                        fontSize = 15.sp,
+                                        letterSpacing = 1.sp,
+                                    )
+                                }
+                            },
+                            navigationIcon = {
+                                IconButton(onClick = { backStack.removeLastOrNull() }) {
+                                    Icon(
+                                        Icons.AutoMirrored.Filled.ArrowBack,
+                                        contentDescription = "Back"
+                                    )
+                                }
+                            },
+                        )
+                    }
+                ) { paddingValues ->
+                    Box(Modifier.padding(paddingValues)) {
+                        VNCharactersScreen(
+                            visualNovelId = details.visualNovelId
+                        )
                     }
                 }
             }
