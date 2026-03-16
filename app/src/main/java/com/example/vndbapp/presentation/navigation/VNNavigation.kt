@@ -46,7 +46,7 @@ import com.example.vndbapp.presentation.screens.bottomnav.VisualNovelScreen
 import com.example.vndbapp.presentation.screens.bottomnav.DollarsChatScreen
 import com.example.vndbapp.presentation.screens.bottomnav.SettingsScreen
 import com.example.vndbapp.presentation.screens.vndetails.VisualNovelDetailScreen
-import com.example.vndbapp.presentation.screens.vndetails.VNCharactersScreen
+import com.example.vndbapp.presentation.screens.vncharacters.VNCharactersScreen
 import com.example.vndbapp.ui.theme.BgApp
 import com.example.vndbapp.ui.theme.Primary
 import com.example.vndbapp.ui.theme.TextMuted

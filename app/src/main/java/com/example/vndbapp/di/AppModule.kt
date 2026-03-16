@@ -1,6 +1,6 @@
 package com.example.vndbapp.di
 
-import com.example.vndbapp.data.local.repository.CharacterRepositoryImpl
+import com.example.vndbapp.data.local.repository.VNCharacterRepositoryImpl
 import com.example.vndbapp.data.local.repository.VisualNovelRepositoryImpl
 import com.example.vndbapp.domain.repository.CharacterRepository
 import com.example.vndbapp.domain.repository.VisualNovelRepository
@@ -19,5 +19,5 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindCharacterRepository(characterRepositoryImpl: CharacterRepositoryImpl): CharacterRepository
+    abstract fun bindCharacterRepository(characterRepositoryImpl: VNCharacterRepositoryImpl): CharacterRepository
 }

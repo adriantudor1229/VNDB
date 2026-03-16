@@ -17,7 +17,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class CharacterRepositoryImpl @Inject constructor(
+class VNCharacterRepositoryImpl @Inject constructor(
     private val characterDao: CharacterDao,
     private val apiService: VisualNovelApiService,
 ) : CharacterRepository {
